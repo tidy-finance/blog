@@ -54,5 +54,26 @@
     "title": "Tidy Finance migrates from SQLite to Parquet",
     "section": "Managing SQLite Databases",
     "text": "Managing SQLite Databases\nFinally, at the end of our data chapter, we revisit the SQLite database itself. When you drop database objects such as tables or delete data from tables, the database file size remains unchanged because SQLite just marks the deleted objects as free and reserves their space for future uses. As a result, the database file always grows in size.\nTo optimize the database file, you can run the VACUUM command in the database, which rebuilds the database and frees up unused space. You can execute the command in the database using the dbSendQuery() function.\n\nres &lt;- dbSendQuery(tidy_finance, \"VACUUM\")\nres\n\nThe VACUUM command actually performs a couple of additional cleaning steps, which you can read about in this tutorial. \nPython offers similar functionalities\n\ntidy_finance.execute(\"VACUUM\")\n\nWe store the result of the above query in res because the database keeps the result set open. To close open results and avoid warnings going forward, we can use dbClearResult().\n\ndbClearResult(res)\n\nApart from cleaning up, you might be interested in listing all the tables that are currently in your database. You can do this via the dbListTables() function.\n\ndbListTables(tidy_finance)\n\nThis function comes in handy if you are unsure about the correct naming of the tables in your database."
+  },
+  {
+    "objectID": "posts/convert-raw-trace-data/index.html",
+    "href": "posts/convert-raw-trace-data/index.html",
+    "title": "Convert Raw TRACE Data to a Local SQLite Database",
+    "section": "",
+    "text": "Corporate bond research is gaining momentum, but data availability can be a challenge for most researchers. While FINRA makes its TRACE Enhanced Data on U.S. corporate bond trading available through vendors such as Wharton Research Data Services (WRDS), not every researcher has access to these services. Alternatively, FINRA offers its Enhanced Historical Data and Academic Data (the latter exclusively) as one-off purchases. However, organizing this data can be complex and time consuming due to the nested and zipped structure of raw TXT files, making it cumbersome for researchers to explore the exciting world of fixed income securities.\nOur R code enables you organizing the TRACE academic data and TRACE enhanced data by eliminating the complexities of multiple, nested files, simplifying the data conversion process. Drawing from the existing SAS-based solution of Dick-Nielsen (2014) 1 and (2019) 2, you can now easily convert TRACE data into a single, organized SQLite database, allowing for seamless and efficient downstream analysis.\nHere are the key benefits our solution offers:\nWith our R code, you can simplify your corporate bond research and overcome current limitations. Don’t let complex data organizing hold you back! Prepare yourself to be immersed in the extraordinary realm of TRACE, the key to unlock a deeper understanding of over-the-counter transactions and to unveil the mysterious pathways of fixed-income securities. With TRACE as your guide, you will embark on a journey of discovery, unraveling market trends and unearthing invaluable insights that will forever enrich your understanding of this mesmerizing world. Embrace the power of TRACE and unveil the secrets that lie within.\nIn the following, we will discuss first, the structure of the bond trading data “TRACE” provided by FINRA, second the proposed normalized database schema for the generated SQLite database, and finally third, give you a brief hands-on guide to downloading data and using our R code to generate the SQLite."
+  },
+  {
+    "objectID": "posts/convert-raw-trace-data/index.html#final-remarks",
+    "href": "posts/convert-raw-trace-data/index.html#final-remarks",
+    "title": "Convert Raw TRACE Data to a Local SQLite Database",
+    "section": "Final Remarks",
+    "text": "Final Remarks\nWe hope that this blog post is helpful to the reader working with TRACE academic data and TRACE enhanced data and in facilitating analyses in this emerging, exciting, and promising field of research.\nAt the end, we would like to thank the editors of Tidy Finance for their helpful suggestions and support with writing this blog post, and our supervisor Prof. Dr. Dirk Schiereck from the Chair of Corporate Finance at TU Darmstadt (Germany) who made the data available for this project."
+  },
+  {
+    "objectID": "posts/convert-raw-trace-data/index.html#footnotes",
+    "href": "posts/convert-raw-trace-data/index.html#footnotes",
+    "title": "Convert Raw TRACE Data to a Local SQLite Database",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nDick-Nielsen, J. (2014). How to clean enhanced TRACE data. Available at [SSRN 2337908] (https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2337908).↩︎\nDick-Nielsen, J., & Poulsen, T. K. (2019). How to clean academic trace data. Available at [SSRN 3456082] (https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3456082).↩︎"
   }
 ]
