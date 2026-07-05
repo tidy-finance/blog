@@ -1,1 +1,1 @@
-Sitemap: https://www.tidy-finance.org/sitemap.xml
+Sitemap: https://blog.tidy-finance.org/sitemap.xml

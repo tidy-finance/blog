@@ -59,9 +59,10 @@ tidy_finance <- dbConnect(
 For our example, we rely on some data retrieved by the `tidyfinance` package: 
 ```{r}
 library(tidyfinance)
+
 factors_ff3_monthly <- download_data(
-  type = "factors_ff_3_monthly", 
-  start_date = start_date, 
+  type = "factors_ff_3_monthly",
+  start_date = start_date,
   end_date = end_date
 )
 ``` 
