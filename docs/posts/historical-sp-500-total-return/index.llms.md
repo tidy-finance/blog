@@ -1,27 +1,10 @@
----
-title: "Construction of a Historical S&P 500 Total Return Index"
-author:
-  - name: Christoph Scheuch
-    url: https://christophscheuch.github.io/
-    affiliations:
-      - name: wikifolio Financial Technologies AG
-      - name: WU Vienna University of Economics and Business
-date: "2023-02-15"
-description: An approximation of total returns using Robert Shiller's stock market data
-image: thumbnail.png
-image-alt: A 3D computer-rendered image of a historical stock exchange building. Created with DALL-E 3.
-categories: 
-  - Data
-  - R
----
-
-I wanted to simulate simple equity savings plans over long time horizons and many different initiation periods for a story with the German news portal [t-online](https://www.t-online.de/finanzen/geld-vorsorge/geldanlage/id_88931406/exklusive-daten-simulation-so-verlieren-sie-langfristig-kein-geld-an-der-boerse.html). The good thing is that the S&P 500 index provides a great starting point as it is easily available since 1928 via [Yahoo Finance](https://finance.yahoo.com/quote/%5EGSPC/). However, I wanted my savings plans to be accumulating, i.e., all cash distributions are reinvested in the savings plan. The S&P index is inadequate for this situation as it is a price index that only tracks its components’ price movements. The [S&P 500 Total Return Index](https://finance.yahoo.com/quote/%5ESP500TR/) tracks the overall performance of the S&P 500 and would be the solution to my problem, but it is only available since 1988. 
+I wanted to simulate simple equity savings plans over long time horizons and many different initiation periods for a story with the German news portal [t-online](https://www.t-online.de/finanzen/geld-vorsorge/geldanlage/id_88931406/exklusive-daten-simulation-so-verlieren-sie-langfristig-kein-geld-an-der-boerse.html). The good thing is that the S&P 500 index provides a great starting point as it is easily available since 1928 via [Yahoo Finance](https://finance.yahoo.com/quote/%5EGSPC/). However, I wanted my savings plans to be accumulating, i.e., all cash distributions are reinvested in the savings plan. The S&P index is inadequate for this situation as it is a price index that only tracks its components’ price movements. The [S&P 500 Total Return Index](https://finance.yahoo.com/quote/%5ESP500TR/) tracks the overall performance of the S&P 500 and would be the solution to my problem, but it is only available since 1988.
 
 Fortunately, I came up with a solution using data provided by [Robert Shiller](http://www.econ.yale.edu/~shiller/) and provide the complete code below for future reference. If you spot any errors or have better suggestions, please feel free to create an issue.
 
-This is the set of packages I use throughout this post. 
+This is the set of packages I use throughout this post.
 
-```{r, message = FALSE}
+``` r
 library(tidyverse) # for overall grammar
 library(tidyfinance) # to download data from yahoo finance
 library(glue) # to automatically construct figure captions
@@ -31,7 +14,7 @@ library(readxl) # to read Shiller's data
 
 First, let us download the S&P 500 Total Return Index from Yahoo Finance. I only consider the closing prices of the last day of each month because my savings plans only transfer funds once a month. In principle, you could also approximate the daily time series, but I believe it will be noiser because Shiller only provides monthly data.
 
-```{r}
+``` r
 sp500_recent <- download_data(
   domain = "Stock Prices",
   symbols = "^SP500TR",
@@ -49,7 +32,7 @@ sp500_recent <- download_data(
 
 Next, I download data from [Robert Shiller’s website](http://www.econ.yale.edu/~shiller/data.htm) that he used in his great book [Irrational Excuberance](https://press.princeton.edu/books/paperback/9780691173122/irrational-exuberance). I create a temporary file and read the relevant sheet. In particular, the data contains monthly S&P 500 price and dividend data. The original file has a bit of annoying date format that I have to correct before parsing.
 
-```{r, warning = FALSE, message = FALSE}
+``` r
 temp <- tempfile(fileext = ".xls")
 
 download.file(
@@ -72,7 +55,7 @@ shiller_historical <- read_excel(temp, sheet = "Data", skip = 7) |>
 
 To construct the total return index, I need a return that includes dividends. In the next code chunk, I compute monthly total returns of the S&P 500 index by incorporating the monthly dividend paid on the index in the corresponding month. Note that Shiller’s data contains the 12-month moving sum of monthly dividends, hence the division by 12. Admittedly, this is a brute force approximation, but I couldn’t come up with a better solution so far.
 
-```{r}
+``` r
 shiller_historical <- shiller_historical |>
   arrange(month) |>
   mutate(ret = (price + dividend / 12) / lag(price) - 1)
@@ -80,7 +63,7 @@ shiller_historical <- shiller_historical |>
 
 Before I go back in time, let us check whether the total return computed above is able to match the actual total return since 1988. I start with the first total return index number that is available and use the cumulative product of returns from above to construct the check time series.
 
-```{r}
+``` r
 check <- shiller_historical |>
   full_join(sp500_recent, by = "month") |>
   filter(!is.na(total_return_index)) |>
@@ -94,18 +77,19 @@ check <- shiller_historical |>
 
 The correlation between the actual time series and the check is remarkably high which gives me confidence in the method I propose here.
 
-```{r}
+``` r
 check |>
   select(total_return_index, total_return_check) |>
   cor()
 ```
 
-In addition, the visual inspection of the two time series in @fig-sp500-1 corroborates my confidence. Note that both the actual and the simulated total return indexes start at the same index value.
+                       total_return_index total_return_check
+    total_return_index          1.0000000          0.9992011
+    total_return_check          0.9992011          1.0000000
 
-```{r}
-#| label: fig-sp500-1
-#| fig-cap: "Simluated and actual S&P 500 Total Return index data move closely together."
-#| fig-alt: "Title: Actual and simulated S&P 500 Total Return index. The figure shows that actual and simulated S&P 500 total return index data move very closely together."
+In addition, the visual inspection of the two time series in [Figure 1](#fig-sp500-1) corroborates my confidence. Note that both the actual and the simulated total return indexes start at the same index value.
+
+``` r
 check |>
   select(month, Actual = total_return_index, Simulated = total_return_check) |>
   pivot_longer(cols = -month) |>
@@ -121,9 +105,13 @@ check |>
   )
 ```
 
+[![Title: Actual and simulated S&P 500 Total Return index. The figure shows that actual and simulated S&P 500 total return index data move very closely together.](index_files/figure-html/fig-sp500-1-1.png)](index_files/figure-html/fig-sp500-1-1.png "Figure 1: Simluated and actual S&P 500 Total Return index data move closely together.")
+
+Figure 1: Simluated and actual S&P 500 Total Return index data move closely together.
+
 Now, let us use the same logic to construct the total return index for the time before 1988. Note that I just sort the months in descending order and divide by the cumulative product of the total return from Shiller’s data.
 
-```{r}
+``` r
 sp500_historical <- sp500_recent |>
   filter(month == min(month)) |>
   full_join(
@@ -140,7 +128,7 @@ sp500_historical <- sp500_recent |>
 
 Before we take a look at the results, I also add the S&P price index from Yahoo Finance for comparison.
 
-```{r}
+``` r
 sp500_price_index <- download_data(
   domain = "Stock Prices",
   symbols = "^GSPC",
@@ -158,7 +146,7 @@ sp500_price_index <- download_data(
 
 Finally, let us combine (i) the actual S&P 500 Total Return Index from 1988 until 2023, (ii) the simulated S&P 500 total return index before 1988, and (iii) the S&P 500 price index from 1928 until 2023.
 
-```{r}
+``` r
 sp500_monthly <- sp500_recent |>
   bind_rows(
     sp500_historical |>
@@ -175,12 +163,24 @@ sp500_monthly <- sp500_recent |>
 sp500_monthly
 ```
 
-@fig-sp500-2 shows the dramatic differences in cumulative returns if you only consider price changes, as the S&P 500 Index does, versus total returns with reinvested capital gains. Note that I plot the indexes in log scale, otherwise everything until the last couple of decades would look like a flat line. I believe it is also important to keep the differences between price and performance indexes in mind whenever you compare equity indexes across countries. For instance, the DAX is a performance index by default and should never be compared with the S&P 500 price index.
+    # A tibble: 1,141 × 3
+       month      total_return_index price_index
+       <date>                  <dbl>       <dbl>
+     1 1928-01-31               1.20        17.6
+     2 1928-02-29               1.21        17.3
+     3 1928-03-31               1.20        19.3
+     4 1928-04-30               1.26        19.8
+     5 1928-05-31               1.35        20  
+     6 1928-06-30               1.39        19.1
+     7 1928-07-31               1.33        19.4
+     8 1928-08-31               1.35        20.9
+     9 1928-09-30               1.39        21.1
+    10 1928-10-31               1.50        21.7
+    # ℹ 1,131 more rows
 
-```{r}
-#| label: fig-sp500-2
-#| fig-cap: "Using total return data yields dramatically higher cumulative returns over a few decades."
-#| fig-alt: "Title: S&P 500 index and Total Return index since 1928. The figure shows dramatic differences in cumulative returns over a few of decades. The figure emphasizes the importance of using total returns indexes to simulate long-term investment decisions."
+[Figure 2](#fig-sp500-2) shows the dramatic differences in cumulative returns if you only consider price changes, as the S&P 500 Index does, versus total returns with reinvested capital gains. Note that I plot the indexes in log scale, otherwise everything until the last couple of decades would look like a flat line. I believe it is also important to keep the differences between price and performance indexes in mind whenever you compare equity indexes across countries. For instance, the DAX is a performance index by default and should never be compared with the S&P 500 price index.
+
+``` r
 sp500_monthly |>
   select(
     month,
@@ -206,3 +206,6 @@ sp500_monthly |>
   )
 ```
 
+[![Title: S&P 500 index and Total Return index since 1928. The figure shows dramatic differences in cumulative returns over a few of decades. The figure emphasizes the importance of using total returns indexes to simulate long-term investment decisions.](index_files/figure-html/fig-sp500-2-1.png)](index_files/figure-html/fig-sp500-2-1.png "Figure 2: Using total return data yields dramatically higher cumulative returns over a few decades.")
+
+Figure 2: Using total return data yields dramatically higher cumulative returns over a few decades.
