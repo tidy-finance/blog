@@ -2,10 +2,6 @@ project:
   type: website
   output-dir: docs
   execute-dir: project
-  # Legacy pandas archive (#258): copied verbatim into docs/legacy-python-pandas/
-  # without rendering/indexing. Run scripts/build-legacy-archive.py first.
-  resources:
-    - legacy-python-pandas
 
 bibliography:
   - assets/bib/book.bib
@@ -21,7 +17,7 @@ execute:
   echo: true
   warning: true
   message: false
-  cache: false
+  cache: true
 
 format:
   html:
@@ -51,9 +47,9 @@ format:
 website:
   title: "Tidy Finance"
   llms-txt: true
-  site-url: https://www.tidy-finance.org
+  site-url: https://blog.tidy-finance.org
   image: assets/img/cover.png
-  repo-url: https://github.com/tidy-finance/website
+  repo-url: https://github.com/tidy-finance/blog
   repo-actions: source
   description: "An opinionated approach on empirical research in financial economics"
   favicon: assets/img/favicon.png
@@ -71,69 +67,15 @@ website:
     logo: assets/img/logo-website-white.png
     pinned: false
     left:
-      - href: chapters/working-with-stock-returns.qmd
+      - href: https://www.tidy-finance.org/chapters/index.qmd
         text: Chapters
-      - href: blog.qmd
+      - href: index.qmd
         text: Blog
-      - href: contribute.qmd
-        text: Contribute
-      - href: support.qmd
+      - href: https://www.tidy-finance.org/support.html
         text: Support
       - href: https://talks.tidy-finance.org
         text: Talks
-      - href: workshops/reproducible-research-workflows.qmd
+      - href: https://www.tidy-finance.org/workshops/reproducible-research-workflows.qmd
         text: Workshops
-  sidebar:
-    - id: tidy-finance
-      style: "floating"
-      search: true
-      collapse-level: 0
-      pinned: true
-      contents:
-        - href: chapters/index.qmd
-          text: Preface
-        - section: "Prerequisites"
-          contents:
-            - chapters/setting-up-your-environment.qmd
-            - chapters/the-tidyfinance-package.qmd
-        - section: "Getting Started"
-          contents:
-            - chapters/working-with-stock-returns.qmd
-            - chapters/modern-portfolio-theory.qmd
-            - chapters/capital-asset-pricing-model.qmd
-            - chapters/financial-statement-analysis.qmd
-            - chapters/discounted-cash-flow-analysis.qmd
-        - section: "Financial Data"
-          contents:
-            - chapters/accessing-and-managing-financial-data.qmd
-            - chapters/wrds-crsp-and-compustat.qmd
-            - chapters/trace-and-fisd.qmd
-            - chapters/other-data-providers.qmd
-        - section: "Asset Pricing"
-          contents:
-            - chapters/beta-estimation.qmd
-            - chapters/univariate-portfolio-sorts.qmd
-            - chapters/size-sorts-and-p-hacking.qmd
-            - chapters/value-and-bivariate-sorts.qmd
-            - chapters/replicating-fama-and-french-factors.qmd
-            - chapters/fama-macbeth-regressions.qmd
-        - section: "Modeling and Machine Learning"
-          contents:
-            - chapters/fixed-effects-and-clustered-standard-errors.qmd
-            - chapters/difference-in-differences.qmd
-            - chapters/factor-selection-via-machine-learning.qmd
-            - chapters/option-pricing-via-machine-learning.qmd
-        - section: "Portfolio Optimization"
-          contents:
-            - chapters/parametric-portfolio-policies.qmd
-            - chapters/constrained-optimization-and-backtesting.qmd
-        - section: "Appendix"
-          contents:
-            - chapters/wrds-dummy-data.qmd
-            - chapters/cover-and-logo-design.qmd
-            - chapters/clean-enhanced-trace.qmd
-            - chapters/proofs.qmd
-            - chapters/colophon.qmd
-            - chapters/changelog.qmd
       
 editor: source
