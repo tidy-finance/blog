@@ -28,7 +28,6 @@ The code relies on the following R packages. Note that the packages `ranger`, `g
 ```{r}
 #| message: false
 #| warning: false
-#| eval: true
 library(tidyverse)
 library(archive)
 library(arrow)
@@ -38,7 +37,7 @@ library(butcher)
 library(future)
 library(tidyfinance) # for portfolio sorts
 # install.packages("ranger")
-# install.packages("glmnet") 
+# install.packages("glmnet")
 # install.packages("brulee")
 ```
 
@@ -52,8 +51,10 @@ The authors provide the dataset with stock-level characteristics online. While t
 
 ```{r}
 options(timeout = 1200)
-characteristics <- read_csv(archive_read("https://dachxiu.chicagobooth.edu/download/datashare.zip", 
-                                         file = "datashare.csv"))
+characteristics <- read_csv(archive_read(
+  "https://dachxiu.chicagobooth.edu/download/datashare.zip",
+  file = "datashare.csv"
+))
 
 characteristics <- characteristics |>
   rename(month = DATE) |>
@@ -61,8 +62,7 @@ characteristics <- characteristics |>
     month = ymd(month),
     month = floor_date(month, "month")
   ) |>
-  rename_with(~ paste0("characteristic_", .), 
-              -c(permno, month, sic2))
+  rename_with(~ paste0("characteristic_", .), -c(permno, month, sic2))
 
 characteristics <- characteristics |>
   drop_na(sic2) |>
@@ -81,11 +81,12 @@ rank_transform <- function(x) {
   rank_x[is.na(x)] <- NA
   min_rank <- 1
   max_rank <- length(na.omit(x))
-  
-  if (max_rank == 0) { # only NAs
-    return(rep(NA, length(x)))    
+
+  if (max_rank == 0) {
+    # only NAs
+    return(rep(NA, length(x)))
   } else {
-    return(2 * ((rank_x - min_rank) / (max_rank - min_rank) - 0.5)) 
+    return(2 * ((rank_x - min_rank) / (max_rank - min_rank) - 0.5))
   }
 }
 
@@ -110,14 +111,14 @@ I interpret the divergence as follows: First, I replace missing values with the 
 
 ```{r}
 characteristics <- characteristics |>
-  group_by(month) |> 
-  mutate(across(contains("characteristic"), 
-                \(x) replace_na(x, median(x, na.rm = TRUE)))) |> 
+  group_by(month) |>
+  mutate(across(contains("characteristic"), \(x) {
+    replace_na(x, median(x, na.rm = TRUE))
+  })) |>
   ungroup()
 
 characteristics <- characteristics |>
-  mutate(across(contains("characteristic"), 
-                \(x) replace_na(x, 0)))
+  mutate(across(contains("characteristic"), \(x) replace_na(x, 0)))
 ```
 
 > We obtain monthly total individual equity returns from CRSP for all firms listed in the NYSE, AMEX, and NASDAQ. Our sample begins in March 1957 (the start date of the S&P 500) (p. 2248)
@@ -136,9 +137,11 @@ We rely on the preparation of the macroeconomic predictors from the correspondin
 To remain consistent, we only lag the macropredictors by one month.  
 
 ```{r}
-tidy_finance <- dbConnect(SQLite(), 
-                          "data/tidy_finance_r.sqlite",
-                          extended_types = TRUE)
+tidy_finance <- dbConnect(
+  SQLite(),
+  "data/tidy_finance_r.sqlite",
+  extended_types = TRUE
+)
 
 crsp_monthly <- tbl(tidy_finance, "crsp_monthly") |>
   select(month, permno, mktcap_lag, ret_excess) |>
@@ -151,16 +154,25 @@ macro_predictors <- tbl(tidy_finance, "macro_predictors") |>
 
 macro_predictors <- macro_predictors |>
   select(month) |>
-  left_join(macro_predictors |> mutate(month = month %m+% months(1)), 
-            join_by(month))
+  left_join(
+    macro_predictors |> mutate(month = month %m+% months(1)),
+    join_by(month)
+  )
 
 characteristics <- characteristics |>
   inner_join(crsp_monthly, join_by(month, permno)) |>
   inner_join(macro_predictors, join_by(month)) |>
   arrange(month, permno) |>
   mutate(macro_intercept = 1) |>
-  select(permno, month, ret_excess, mktcap_lag, 
-         sic2, contains("macro"), contains("characteristic"))
+  select(
+    permno,
+    month,
+    ret_excess,
+    mktcap_lag,
+    sic2,
+    contains("macro"),
+    contains("characteristic")
+  )
 ```
 
 ### Create dataset with all interaction terms
@@ -172,13 +184,13 @@ Before applying machine-learning models, the authors include interaction terms b
 The following recipe creates dummies for each `sic2` code and adds interaction terms between macro variables and stock characteristics. Note that `data` for the recipe is only required to identify the columns in the sample. No computations are performed at the first step. For that reason, I call `head()` to keep the computational burden a bit lower without affecting the outcome. 
 
 ```{r}
-rec <- recipe(ret_excess ~ ., data = characteristics |> head())|>
-  update_role(permno, month, mktcap_lag, 
-              new_role = "id") |>
-  step_interact(terms = ~ contains("characteristic"):contains("macro"), 
-                keep_original_cols = FALSE) |>
-  step_dummy(sic2, 
-             one_hot = TRUE)
+rec <- recipe(ret_excess ~ ., data = characteristics |> head()) |>
+  update_role(permno, month, mktcap_lag, new_role = "id") |>
+  step_interact(
+    terms = ~ contains("characteristic"):contains("macro"),
+    keep_original_cols = FALSE
+  ) |>
+  step_dummy(sic2, one_hot = TRUE)
 
 rec <- prep(rec)
 ```
@@ -193,7 +205,7 @@ I store the prepared file for your convenience. Furthermore, the authors never u
 
 ```{r}
 characteristics_prepared |>
-  group_by(year = year(month)) |> 
+  group_by(year = year(month)) |>
   write_dataset(path = "data/characteristics_prepared")
 ```
 
@@ -204,38 +216,46 @@ characteristics_prepared |>
 I visualize my understanding of this data-budget below.
 
 ```{r}
-#| eval: true
 validation_length <- 12
 
-estimation_periods <- tibble(oos_year = 1987:2021,
-                             validation_end = oos_year - 1,
-                             validation_start = oos_year - validation_length,
-                             training_start = 1957,
-                             training_end = validation_start - 1) |>
+estimation_periods <- tibble(
+  oos_year = 1987:2021,
+  validation_end = oos_year - 1,
+  validation_start = oos_year - validation_length,
+  training_start = 1957,
+  training_end = validation_start - 1
+) |>
   select(contains("training"), validation_start, validation_end, oos_year)
 
-visualization_data = pmap_dfr(estimation_periods, 
-                              \(training_start, 
-                                training_end, 
-                                validation_start, 
-                                validation_end, 
-                                oos_year){
-  tibble(year = 1957:2021,
-         classification = case_when(year >= training_start & year <= training_end ~ "Training",
-                                    year >= validation_start & year <= validation_end ~ "Validation",
-                                    year == oos_year ~ "OOS"), 
-         oos_year)
-  }) |> 
+visualization_data <- pmap_dfr(
+  estimation_periods,
+  \(training_start, training_end, validation_start, validation_end, oos_year) {
+    tibble(
+      year = 1957:2021,
+      classification = case_when(
+        year >= training_start & year <= training_end ~ "Training",
+        year >= validation_start & year <= validation_end ~ "Validation",
+        year == oos_year ~ "OOS"
+      ),
+      oos_year
+    )
+  }
+) |>
   drop_na()
 
-ggplot(visualization_data, 
-       aes(x = year, y = oos_year, color = classification)) +
+ggplot(
+  visualization_data,
+  aes(x = year, y = oos_year, color = classification)
+) +
   geom_point(size = 1) +
-  labs(title = "Data classification timeline",
-       x = NULL, y = NULL, color = NULL) +
+  labs(
+    title = "Data classification timeline",
+    x = NULL,
+    y = NULL,
+    color = NULL
+  ) +
   theme_minimal() +
-  theme(axis.text.y = element_blank(),
-        axis.ticks.y = element_blank())
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
 ```
 
 The simple scheme makes model tuning computationally less complex. As there is no need to create several validation sets and thus to reestimate the models several times, the overall time to compute predictions is reduced substantially. One may discuss the substantial sampling variation of the resulting MSPE from the validation sample (typically cross-validation is used to obtain more than one estimate of the prediction error). However, the authors clearly state:
@@ -247,7 +267,9 @@ The simple scheme makes model tuning computationally less complex. As there is n
 The paper describes a collection of machine learning methods that was used in the analysis. I refer to Section 1 for a detailed description of the individual models. This blog post focuses on the implementation issues that arise when applying off-the-shelf ML methods on such a large dataset. 
 
 ```{r}
-characteristics_prepared <- open_dataset(sources = "data/characteristics_prepared")
+characteristics_prepared <- open_dataset(
+  sources = "data/characteristics_prepared"
+)
 ```
 
 > Table A.5 (online appendix) describes the set of hyperparameters and their potential values used for tuning each machine learning model.
@@ -264,19 +286,23 @@ rf_model <- rand_forest(
   trees = 300,
   min_n = tune()
 ) |>
-  set_engine("ranger", 
-             num.threads = parallel::detectCores(logical = FALSE) - 1) |>
+  set_engine(
+    "ranger",
+    num.threads = parallel::detectCores(logical = FALSE) - 1
+  ) |>
   set_mode("regression")
 
 rf_grid <- expand_grid(
   mtry = c(3, 5, 10, 20, 30, 50),
-  min_n = c(5000, 10000) 
+  min_n = c(5000, 10000)
 )
 ```
 
 ```{r}
-rec_final <- recipe(ret_excess ~ 0 + ., 
-                    data = characteristics_prepared |> head() |> collect()) |>
+rec_final <- recipe(
+  ret_excess ~ 0 + .,
+  data = characteristics_prepared |> head() |> collect()
+) |>
   update_role(permno, month, mktcap_lag, year, new_role = "id")
 
 ml_workflow <- workflow() |>
@@ -290,24 +316,26 @@ The following performs the model estimation to create predictions for all the ye
 ```{r}
 j <- 1 # loop until nrow(estimation_periods) for full replication
 
-split_dates <- estimation_periods |> 
+split_dates <- estimation_periods |>
   filter(row_number() == j)
 
-train <- characteristics_prepared |> 
+train <- characteristics_prepared |>
   filter(year(month) < split_dates$training_end) |>
-  collect() 
+  collect()
 
-validation <- characteristics_prepared |>  
-  filter(year(month) >= split_dates$validation_start & 
-           year(month) <= split_dates$validation_end) |>
+validation <- characteristics_prepared |>
+  filter(
+    year(month) >= split_dates$validation_start &
+      year(month) <= split_dates$validation_end
+  ) |>
   collect()
 
 data_split <- make_splits(
   x = train,
-  assessment = validation )
+  assessment = validation
+)
 
-folds <- manual_rset(list(data_split), 
-                     ids = "split")
+folds <- manual_rset(list(data_split), ids = "split")
 ```
 
 I tune the model and - after selecting the optimal tuning parameter value based on the prediction error in the validation set - fit the penalized regression using the available data (training and validation test set). The process can be faster by distribution the parameter tuning across multiple workers. `tidymodels` takes care of this as long as the user specifies a plan. I set the option `parallel_over = "resamples"` so that the formula is processed only once and then reused across all models that need to be fit. parallelization across the hyperparameter grid in `tidymodels` is done by initiating a `plan()` according to the [documentation](https://tune.tidymodels.org/articles/extras/optimizations.html).
@@ -320,7 +348,8 @@ ml_fit <- ml_workflow |>
     resample = folds,
     grid = rf_grid,
     metrics = metric_set(rmse),
-    control = control_grid(parallel_over = "resamples"))
+    control = control_grid(parallel_over = "resamples")
+  )
 ```
 
 If more computation time is available, it is likely advisable to expand the number of evaluation by providing a wider grid of possible parameter constellations. Next, we finalize the process by selecting the hyperparameter constellation which delivered the smallest mean squared prediction error and fit the model once more using the entire (training and validation) datasets.  
@@ -329,8 +358,8 @@ If more computation time is available, it is likely advisable to expand the numb
 ml_fit_best <- ml_fit |>
   select_best(metric = "rmse")
 
-ml_workflow_final <- ml_workflow |> 
-  finalize_workflow(ml_fit_best) |> 
+ml_workflow_final <- ml_workflow |>
+  finalize_workflow(ml_fit_best) |>
   fit(bind_rows(train, validation))
 ```
 
@@ -338,7 +367,10 @@ Trained workflows contain a lot of information which may be redundant for the ta
 
 ```{r}
 fitted_workflow <- butcher(ml_workflow_final)
-write_rds(fitted_workflow, file = paste0("data/fitted_workflow_",split_dates$oos_year,".rds"))
+write_rds(
+  fitted_workflow,
+  file = paste0("data/fitted_workflow_", split_dates$oos_year, ".rds")
+)
 ```
 
 ## Other ML models
@@ -355,13 +387,13 @@ For instance, to fit the elastic net it seems necessary to evaluate the mean-squ
 #| eval: false
 # install.packages("glmnet")
 
-elastic_net <- linear_reg( 
+elastic_net <- linear_reg(
   penalty = tune(),
   mixture = 0.5
 ) |>
   set_engine("glmnet")
 
-penalty_grid = tibble(penalty = c(1e-4, 1e-1))
+penalty_grid <- tibble(penalty = c(1e-4, 1e-1))
 ```
 
 For the neural network, the paper specifies the manifold architecture choices
@@ -408,22 +440,21 @@ The following code chunks performs the predictions for every out-of-sample year 
 
 fitted_workflow <- read_rds("data/fitted_workflow_1987.rds")
 
-create_predictions <- function(oos_year){
-
-  out_of_sample <- characteristics_prepared |> 
+create_predictions <- function(oos_year) {
+  out_of_sample <- characteristics_prepared |>
     filter(year(month) == oos_year) |>
     collect()
 
   #fitted_workflow <- read_rds(paste0("data/fitted_workflow_", oos_year,".rds"))
-  
-  out_of_sample_predictions <- fitted_workflow |> 
+
+  out_of_sample_predictions <- fitted_workflow |>
     predict(out_of_sample)
 
- out_of_sample <- out_of_sample |>
+  out_of_sample <- out_of_sample |>
     select(permno, month, mktcap_lag, ret_excess) |>
     bind_cols(out_of_sample_predictions)
 
-return(out_of_sample)
+  return(out_of_sample)
 }
 
 
@@ -440,14 +471,10 @@ To assign portfolios using the predictions, I use the `assign_portfolio()` from 
 
 ```{r}
 #| echo: false
-#| eval: true
-
 oos_predictions <- read_feather("../../data/oos_predictions.feather")
 ```
 
 ```{r}
-#| eval: true
-
 ml_portfolios <- oos_predictions |>
   group_by(month) |>
   mutate(
@@ -469,22 +496,24 @@ ml_portfolios <- oos_predictions |>
 Finally, we evaluate the performance of the ML-portfolios. The table reports the predicted return, the average realized return, the standard deviation, and the out-of-sample Sharpe ratio for each of the decile portfolios as well as the long-short zero-cost portfolio. 
 
 ```{r}
-#| eval: true
-hml_portfolio <- ml_portfolios |> 
+hml_portfolio <- ml_portfolios |>
   reframe(
     ret_excess = ret_excess[portfolio == 10] - ret_excess[portfolio == 1],
-    ret_predicted = ret_predicted[portfolio == 10] - ret_predicted[portfolio == 1],
+    ret_predicted = ret_predicted[portfolio == 10] -
+      ret_predicted[portfolio == 1],
     month = month[portfolio == 10],
     portfolio = factor("H-L", levels = as.character(c(1:10, "H-L"))),
-  ) 
+  )
 
 ml_portfolios |>
   bind_rows(hml_portfolio) |>
   group_by(portfolio) |>
-  summarize(predicted_mean = mean(ret_predicted), 
-            realized_mean = mean(ret_excess),
-            realized_sd = sd(ret_excess),
-            sharpe_ratio = realized_mean / realized_sd) |>
+  summarize(
+    predicted_mean = mean(ret_predicted),
+    realized_mean = mean(ret_excess),
+    realized_sd = sd(ret_excess),
+    sharpe_ratio = realized_mean / realized_sd
+  ) |>
   print(n = Inf)
 ```
 

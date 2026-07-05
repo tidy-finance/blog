@@ -4,4 +4,18 @@
 
 ## Pages
 
-- [CIR Model Calibration using Python](https://www.tidy-finance.org/posts/cir-calibration/index.llms.md)
+- [Tidy Finance Blog](https://blog.tidy-finance.org/index.llms.md)
+- [Using DuckDB with WRDS Data](https://blog.tidy-finance.org/posts/using-duckdb-with-wrds/index.llms.md)
+- [Replicating Gu, Kelly & Xiu (2020)](https://blog.tidy-finance.org/posts/gu-kelly-xiu-replication/index.llms.md)
+- [Convert Raw TRACE Data to a Local SQLite Database](https://blog.tidy-finance.org/posts/convert-raw-trace-data/index.llms.md)
+- [The legacy pandas edition of Tidy Finance with Python (unmaintained archive)](https://blog.tidy-finance.org/posts/legacy-python-pandas/index.llms.md)
+- [High-Frequency Market Data: lobsteR and 20 Years of SPY on Hugging Face](https://blog.tidy-finance.org/posts/hf-and-hugging-face/index.llms.md)
+- [lobsteR package and high-frequency data](https://blog.tidy-finance.org/posts/hf-and-lobster/index.llms.md)
+- [CIR Model Calibration using Python](https://blog.tidy-finance.org/posts/cir-calibration/index.llms.md)
+- [Tidy Market Microstructure](https://blog.tidy-finance.org/posts/tidy-market-microstructure/index.llms.md)
+- [Tidy Finance migrates from SQLite to Parquet](https://blog.tidy-finance.org/posts/sql-legacy-version/sql-legacy-version.llms.md)
+- [ISS Shareholder Proposals](https://blog.tidy-finance.org/posts/iss-shareholder-proposals/index.llms.md)
+- [Construction of a Historical S&P 500 Total Return Index](https://blog.tidy-finance.org/posts/historical-sp-500-total-return/index.llms.md)
+- [CRSP 2.0 Update](https://blog.tidy-finance.org/posts/crsp-v2-update/index.llms.md)
+- [Comparing Fama-French Three vs Five Factors](https://blog.tidy-finance.org/posts/fama-french-three-vs-five-factors/index.llms.md)
+- [Non-Standard Errors in Portfolio Sorts](https://blog.tidy-finance.org/posts/nse-portfolio-sorts/index.llms.md)

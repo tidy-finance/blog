@@ -1,0 +1,21 @@
+[
+  {
+    "listing": "/index.html",
+    "items": [
+      "/posts/legacy-python-pandas/index.html",
+      "/posts/hf-and-hugging-face/index.html",
+      "/posts/sql-legacy-version/sql-legacy-version.html",
+      "/posts/iss-shareholder-proposals/index.html",
+      "/posts/hf-and-lobster/index.html",
+      "/posts/gu-kelly-xiu-replication/index.html",
+      "/posts/cir-calibration/index.html",
+      "/posts/crsp-v2-update/index.html",
+      "/posts/tidy-market-microstructure/index.html",
+      "/posts/using-duckdb-with-wrds/index.html",
+      "/posts/fama-french-three-vs-five-factors/index.html",
+      "/posts/convert-raw-trace-data/index.html",
+      "/posts/nse-portfolio-sorts/index.html",
+      "/posts/historical-sp-500-total-return/index.html"
+    ]
+  }
+]

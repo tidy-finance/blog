@@ -35,7 +35,7 @@ With commit [6acb50b](https://github.com/tidy-finance/website/commit/6acb50b4d7e
 
 Tidy Finance shows how to download the most used data in empirical research in finance from the [Wharton Research Data Services (WRDS)](https://wrds-www.wharton.upenn.edu/). A main component of this data is the stock return history provided by the [Center for Research in Security Prices (CRSP)](https://crsp.org/). CRSP is the de-facto gold standard for stock return data covering historical returns from the 1920s until now.
 
-You can read all about how to connect to WRDS and download the CRSP data in our chapter **WRDS, CRSP, and Compustat** in the [R version](../../chapters/wrds-crsp-and-compustat.qmd) and the [Python version](../../chapters/wrds-crsp-and-compustat.qmd).
+You can read all about how to connect to WRDS and download the CRSP data via R or Python in our chapter [**WRDS, CRSP, and Compustat**](https://www.tidy-finance.org/chapters/wrds-crsp-and-compustat.html).
 
 ## CRSP format 2.0 (CIZ)
 
@@ -57,11 +57,11 @@ msf_db <- tbl(wrds, in_schema("crsp", "msf_v2"))
 stksecurityinfohist_db <- tbl(wrds, in_schema("crsp", "stksecurityinfohist"))
 ```
 
-We do not repost the new routines for downloading the data in this blog. Instead, we ask you to check out the new code in the respective chapter on **WRDS, CRSP, and Compustat** in the [R version](../../chapters/wrds-crsp-and-compustat.qmd) and the [Python version](../../chapters/wrds-crsp-and-compustat.qmd).
+We do not repost the new routines for downloading the data in this blog. Instead, we ask you to check out the new code in the respective chapter on [**WRDS, CRSP, and Compustat**](https://www.tidy-finance.org/chapters/wrds-crsp-and-compustat.html).
 
 ## A small glimpse at the differences
 
-To take a look at the new table and compare it to the old one, we use the new `tidyfinance` R package (see our recent blog post on the initial release [here](../../docs/blog/r-tidyfinance-0-1-0/)) to download the data. If you do not have the package yet, please install it from CRAN using `install.packages("tidyfinance")`. For ease of use, we also load the full `tidyverse` as in all our chapters of the R book.
+To take a look at the new table and compare it to the old one, we use the new `tidyfinance` R package. If you do not have the package yet, please install it from CRAN using `install.packages("tidyfinance")`. For ease of use, we also load the full `tidyverse` as in all our chapters of the R book.
 
 ```{r}
 #| message: false
@@ -75,15 +75,19 @@ Then, we can download the two data formats using the function `download_data_wrd
 ```{r}
 #| warning: false
 #| message: false
-crsp_v1 <- download_data_wrds_crsp("crsp_monthly", 
-                                    version = "v1",
-                                    start_date = "1970-01-01",
-                                    end_date = "2022-12-01")
+crsp_v1 <- download_data_wrds_crsp(
+  "crsp_monthly",
+  version = "v1",
+  start_date = "1970-01-01",
+  end_date = "2022-12-01"
+)
 
-crsp_v2 <- download_data_wrds_crsp("crsp_monthly", 
-                                    version = "v2",
-                                    start_date = "1970-01-01",
-                                    end_date = "2022-12-01")
+crsp_v2 <- download_data_wrds_crsp(
+  "crsp_monthly",
+  version = "v2",
+  start_date = "1970-01-01",
+  end_date = "2022-12-01"
+)
 ```
 
 Now, do we find any significant differences between the data? Let us look at the number of observations identified by `permno` and `date`.
@@ -96,8 +100,7 @@ nrow(crsp_v1)
 We see that the new data contains more rows. However, we are not sure where these observations come from or where we lost them in the old data. Let us see if the observations are actually matched for the identifiers with a `anti_join()`.
 
 ```{r}
-anti_join(crsp_v2, crsp_v1,
-          by = join_by("permno", "date")) |> 
+anti_join(crsp_v2, crsp_v1, by = join_by("permno", "date")) |>
   nrow()
 ```
 
@@ -106,13 +109,17 @@ We find that roughly 4,000 observations are not matched. However, this is a very
 Next, we check if the monthly returns are all the same. We compare the new returns to the adjusted returns from version 1.0 to account for delisting in both versions. In fact, these returns should be slightly different, as CRSP states that they have updated the way to compound distributions. They also state this change in compounding as an example, among other things. However, they do not yet provide more information about these *other* things.
 
 ```{r}
-inner_join(crsp_v2 |> 
-             select(permno, date, ret_new = ret_excess), 
-           crsp_v1 |> 
-             select(permno, date, ret_old = ret_excess),
-          by = join_by("permno", "date")) |> 
-  mutate(ret_differences = !near(ret_new, ret_old, tol = 10^-6)) |> 
-  summarize(share_all_ret_differences = sum(ret_differences, na.rm = TRUE) / n())
+inner_join(
+  crsp_v2 |>
+    select(permno, date, ret_new = ret_excess),
+  crsp_v1 |>
+    select(permno, date, ret_old = ret_excess),
+  by = join_by("permno", "date")
+) |>
+  mutate(ret_differences = !near(ret_new, ret_old, tol = 10^-6)) |>
+  summarize(
+    share_all_ret_differences = sum(ret_differences, na.rm = TRUE) / n()
+  )
 ```
 
 Indeed, we see that not all returns are exactly matched.

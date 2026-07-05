@@ -13,7 +13,7 @@ links-as-notes: true
 
 execute:
   freeze: auto
-  eval: true
+  eval: false
   echo: true
   warning: true
   message: false
