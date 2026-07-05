@@ -1,0 +1,7 @@
+# Tidy Finance
+
+> An opinionated approach on empirical research in financial economics
+
+## Pages
+
+- [CIR Model Calibration using Python](https://www.tidy-finance.org/posts/cir-calibration/index.llms.md)

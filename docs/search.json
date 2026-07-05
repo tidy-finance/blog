@@ -1,0 +1,16 @@
+[
+  {
+    "objectID": "posts/cir-calibration/index.html",
+    "href": "posts/cir-calibration/index.html",
+    "title": "CIR Model Calibration using Python",
+    "section": "",
+    "text": "The Cox–Ingersoll–Ross (CIR)1 model stands as a cornerstone within the vast expanse of Financial Mathematics literature. Originally conceived to refine the well-known Vasicek2 model in Interest Rate Modeling, the CIR model addressed a notable limitation of its predecessor—specifically, the propensity of Gaussian models like Vasicek’s to generate negative interest rates, a feature often deemed undesirable despite the theoretical possibility of negative rates in reality.\nIn this concise exposition, I will delineate the process of calibrating the Cox–Ingersoll–Ross model using Python. From a theoretical point of view, I will define linear models to calibrate the CIR model and test their feasibility via Monte-Carlo simulations."
+  },
+  {
+    "objectID": "posts/cir-calibration/index.html#footnotes",
+    "href": "posts/cir-calibration/index.html#footnotes",
+    "title": "CIR Model Calibration using Python",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nCox, J. C., Ingersoll Jr, J. E., & Ross, S. A. (1985). A Theory of the Term Structure of Interest Rates. Econometrica, 53(2), 385-408. Link.↩︎\nVasicek, O. (1977). An equilibrium characterization of the term structure. Journal of financial economics, 5(2), 177-188. Link.↩︎\nOrlando, G., Mininni, R. M., and Bufalo, M. (2020). Forecasting interest rates through vasicek and cir models: A partitioning approach. Journal of Forecasting, 39(4):569–579. Link.↩︎"
+  }
+]

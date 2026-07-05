@@ -1,45 +1,24 @@
----
-title: "CIR Model Calibration using Python"
-author:
-  - name: Yuri Antonelli
-    url: https://github.com/YuriAntonelli
-date: "2024-04-03"
-description: Routine to calibrate the Cox-Ingersoll-Ross model
-categories: 
-  - Interest rates
-  - Python
-image: thumbnail.jpeg
-image-alt: A vibrant outdoor scene under a clear, sunny sky, where a group of workers assemble a futuristic machine. The machine, situated in the center, features a complex design with gears and levers but no visible numbers or text. A colorful line chart representing an interest rate time series floats in the air, created by the machine. The chart consists of smooth, winding lines in various colors against a clear background. The workers are dressed in casual attire, and the landscape includes green grass and a few trees, contributing to the overall cheerful ambiance. Created with DALL-E 3.
-jupyter: python3
----
-
-The Cox–Ingersoll–Ross (CIR)^[Cox, J. C., Ingersoll Jr, J. E., & Ross, S. A. (1985). A Theory of the Term Structure of Interest Rates. Econometrica, 53(2), 385-408. [Link.](https://www.worldscientific.com/doi/abs/10.1142/9789812701022_0005)] model stands as a cornerstone within the vast expanse of Financial Mathematics literature. Originally conceived to refine the well-known Vasicek^[Vasicek, O. (1977). An equilibrium characterization of the term structure. Journal of financial economics, 5(2), 177-188. [Link.](https://doi.org/10.1016/0304-405X(77)90016-2)] model in Interest Rate Modeling, the CIR model addressed a notable limitation of its predecessor—specifically, the propensity of Gaussian models like Vasicek's to generate negative interest rates, a feature often deemed undesirable despite the theoretical possibility of negative rates in reality.
+The Cox–Ingersoll–Ross (CIR)[^1] model stands as a cornerstone within the vast expanse of Financial Mathematics literature. Originally conceived to refine the well-known Vasicek[^2] model in Interest Rate Modeling, the CIR model addressed a notable limitation of its predecessor—specifically, the propensity of Gaussian models like Vasicek’s to generate negative interest rates, a feature often deemed undesirable despite the theoretical possibility of negative rates in reality.
 
 In this concise exposition, I will delineate the process of calibrating the Cox–Ingersoll–Ross model using Python. From a theoretical point of view, I will define linear models to calibrate the CIR model and test their feasibility via Monte-Carlo simulations.
 
 ### CIR Model - Overview
 
-The CIR model aims to capture the dynamics of interest rates, offering a powerful alternative to the Vasicek model. 
+The CIR model aims to capture the dynamics of interest rates, offering a powerful alternative to the Vasicek model.
 
 The Vasicek model can be mathematically defined by an Ornstein–Uhlenbeck process with an added drift term. This is a stochastic process particularly suitable for interest rate dynamics, owing to its inherent properties of **stationarity** and **mean-reversion**. These attributes align with the behavior commonly observed in interest rates.
 
-The SDE (stochastic differential equation) for the Vasicek model is the following (where $dW_t$ denotes the Wiener process): 
-$$
-dr_t=k(\theta-r_t)dt+\sigma dW_t
-$$
+The SDE (stochastic differential equation) for the Vasicek model is the following (where \\dW_t\\ denotes the Wiener process): \\ dr_t=k(\theta-r_t)dt+\sigma dW_t \\
 
 Moreover, the model yields an intuitive interpretation of its parameters:
 
-- $\theta$ is the long-run average
+- \\\theta\\ is the long-run average
 
-- $k$ is the intensity with which the process returns to its long-run average
+- \\k\\ is the intensity with which the process returns to its long-run average
 
-- $\sigma$ is the instantaneous volatility
+- \\\sigma\\ is the instantaneous volatility
 
-In contrast, the CIR model differs by introducing a novel component into the diffusion part of the process, precisely $\sqrt{r_t}$, as depicted below:
-$$
-dr_t=k(\theta-r_t)dt+\sigma\sqrt{r_t}dW_t
-$$
+In contrast, the CIR model differs by introducing a novel component into the diffusion part of the process, precisely \\\sqrt{r_t}\\, as depicted below: \\ dr_t=k(\theta-r_t)dt+\sigma\sqrt{r_t}dW_t \\
 
 This seemingly minor adjustment has profound implications, as it ensures that interest rates remain strictly positive. However, this modification also engenders notable distinctions between the two models.
 
@@ -49,50 +28,24 @@ Without delving into mathematical intricacies, it is imperative to recognize tha
 
 The initial step necessitates discretization to manage the CIR model effectively and derive OLS estimates. This task is efficiently achieved through the Euler-Maruyama Scheme, a numerical method enabling the transformation of the stochastic differential equation (SDE) into a discrete-time equation. Essentially, this scheme involves approximating each differential term as a finite difference, with the accuracy of the approximation improving as the time step decreases.
 
-This leads to the following equation:
-$$
-r_{t + \delta t} - r_t = k(\theta - r_t)\delta t + \sigma \sqrt{r_t}N(0, \delta t)
-$$
+This leads to the following equation: \\ r\_{t + \delta t} - r_t = k(\theta - r_t)\delta t + \sigma \sqrt{r_t}N(0, \delta t) \\
 
-Following some straightforward manipulations, it can be rewritten as:
-$$
-\frac{{r_{t + \delta t} - r_t}}{{\sqrt{r_t}}} = \frac{k\theta \delta t}{\sqrt{r_t}} - k\sqrt{r_t} \delta t + \sigma \sqrt{\delta t} N(0,1)
-$$
+Following some straightforward manipulations, it can be rewritten as: \\ \frac{{r\_{t + \delta t} - r_t}}{{\sqrt{r_t}}} = \frac{k\theta \delta t}{\sqrt{r_t}} - k\sqrt{r_t} \delta t + \sigma \sqrt{\delta t} N(0,1) \\
 
-This can be interpreted as:
-$$
-y_i = \beta_1 z_{1,i} + \beta_2 z_{2,i} + \epsilon_i
-$$
+This can be interpreted as: \\ y_i = \beta_1 z\_{1,i} + \beta_2 z\_{2,i} + \epsilon_i \\
 
-Where:
-$$
-\begin{aligned}
-    y_i &= \frac{r_{t+\delta t}-r_t}{\sqrt{r_t}} \\
-    \beta_1 &= k\theta \\
-    \beta_2 &= -k \\
-    z_{1,i} &= \frac{\delta t}{\sqrt{r_t}} \\
-    z_{2,i} &= \sqrt{r_t}\delta t \\
-    \epsilon_i &= \sigma \sqrt{\delta t} N(0,1)
-\end{aligned}
-$$
+Where: \\ \begin{aligned} y_i &= \frac{r\_{t+\delta t}-r_t}{\sqrt{r_t}} \\ \beta_1 &= k\theta \\ \beta_2 &= -k \\ z\_{1,i} &= \frac{\delta t}{\sqrt{r_t}} \\ z\_{2,i} &= \sqrt{r_t}\delta t \\ \epsilon_i &= \sigma \sqrt{\delta t} N(0,1) \end{aligned} \\
 
-Estimating the parameters of interest then becomes straightforward:
-$$
-\begin{aligned}
-\hat{k} &= -\hat{\beta_2} \\
-\hat{\theta} &= \frac{\hat{\beta_1}}{\hat{k}} \\
-\hat{\sigma^2} &= \frac{\hat{Var(\epsilon)}}{\delta_t}
-\end{aligned}
-$$
+Estimating the parameters of interest then becomes straightforward: \\ \begin{aligned} \hat{k} &= -\hat{\beta_2} \\ \hat{\theta} &= \frac{\hat{\beta_1}}{\hat{k}} \\ \hat{\sigma^2} &= \frac{\hat{Var(\epsilon)}}{\delta_t} \end{aligned} \\
 
 ### Python Implementation
+
 Upon reviewing the mathematical details, the next step is to translate them into Python code. I will define two functions:
 
-- `simulate_cir()`: This function simulates a path based on theoretical parameters. It is important to note that in the CIR model, the term $\sqrt{r_t}$ requires that $r_t$ remains non-negative. However, since we are working with a discrete form of the model, simulation errors may arise due to negative rates stemming from the random component of the model. These errors need to be addressed.
-This is facilitated by the following piece of code: `np.sqrt(max(0, r))`, which guarantees that no negative interest rate is passed under the square root.
+- `simulate_cir()`: This function simulates a path based on theoretical parameters. It is important to note that in the CIR model, the term \\\sqrt{r_t}\\ requires that \\r_t\\ remains non-negative. However, since we are working with a discrete form of the model, simulation errors may arise due to negative rates stemming from the random component of the model. These errors need to be addressed. This is facilitated by the following piece of code: `np.sqrt(max(0, r))`, which guarantees that no negative interest rate is passed under the square root.
 - `ols_cir()`: This function performs the estimates based on a given array of values.
 
-```{python}
+``` python
 # import libraries
 import numpy as np
 from sklearn.linear_model import LinearRegression
@@ -147,10 +100,9 @@ def ols_cir(data, dt):
     return k0, theta0, sigma0
 ```
 
-The subsequent step involves applying these functions to a specific case by fixing theoretical parameters for the CIR model.
-In this instance, I will opt for relatively standard parameter values. However, a more formal analysis would require exploring a range of values for each parameter to evaluate the robustness of the estimators under different conditions.
+The subsequent step involves applying these functions to a specific case by fixing theoretical parameters for the CIR model. In this instance, I will opt for relatively standard parameter values. However, a more formal analysis would require exploring a range of values for each parameter to evaluate the robustness of the estimators under different conditions.
 
-```{python}
+``` python
 k_true = 5 # True mean reversion speed
 theta_true = 0.05  # True long-run mean
 sigma_true = 0.03 # True volatility of interest rates
@@ -169,22 +121,18 @@ print(f"The theoretical parameters are: k={k_true}, theta={theta_true}, sigma={s
 print(f"The estimates are: k={round(estimates[0], 3)}, theta={round(estimates[1], 3)}, sigma={round(estimates[2], 3)}")
 ```
 
+    The theoretical parameters are: k=5, theta=0.05, sigma=0.03
+    The estimates are: k=5.078, theta=0.051, sigma=0.034
+
 ### Monte-Carlo Results
 
 The final step entails conducting a Monte Carlo Simulation to thoroughly scrutinize how the estimators perform. The model comprises two components: a deterministic one and a stochastic one. In the preceding step, I calibrated the model using a single vector of Gaussian samples, which generated a particular path. Now, I will repeat this process with several different vectors of Gaussian samples, generating multiple paths while maintaining the same real parameters.
 
 If the estimators are reasonably accurate, we should observe a convergence of the Monte Carlo estimates means towards the real parameters, indicating the unbiasedness of the estimators in principle.
 
-It is important to note that due to discretization errors, there is a possibility of generating paths with negative interest rates. To address this issue, I will adopt the approach suggested in Orlando, Mininni, and Bufalo (2020)^[Orlando, G., Mininni, R. M., and Bufalo, M. (2020). Forecasting interest rates through vasicek and cir models: A partitioning approach. Journal of Forecasting, 39(4):569–579. [Link.](https://doi.org/10.1002/for.2642)], which involves shifting all series by the 99th percentile before the calibration. This allows, in most cases, to work with a positive series of data.
-It is crucial to highlight that if we intend to use the calibrated model for predictions, we must subsequently subtract the same quantity from the predictions. This adjustment is implemented in the code via an if statement within the while loop.
+It is important to note that due to discretization errors, there is a possibility of generating paths with negative interest rates. To address this issue, I will adopt the approach suggested in Orlando, Mininni, and Bufalo (2020)[^3], which involves shifting all series by the 99th percentile before the calibration. This allows, in most cases, to work with a positive series of data. It is crucial to highlight that if we intend to use the calibrated model for predictions, we must subsequently subtract the same quantity from the predictions. This adjustment is implemented in the code via an if statement within the while loop.
 
-```{python}
-#| label: fig-blog-cir
-#| fig-cap: 
-#|   - "Results of Monte Carlo Simulation for parameter k."
-#|   - "Results of Monte Carlo Simulation for parameter Theta."
-#|   - "Results of Monte Carlo Simulation for parameter Sigma."
-#| fig-pos: "htb"
+``` python
 # define variables
 n_scenarios = 10000
 paths = np.zeros(shape=(n_scenarios, N+1))
@@ -240,21 +188,34 @@ for i in range(3):  # Using range(3) for iterating over indices
     plt.show()
 ```
 
+[![](index_files/figure-html/fig-blog-cir-output-1.png)](index_files/figure-html/fig-blog-cir-output-1.png "Figure 1: Results of Monte Carlo Simulation for parameter k.")
+
+Figure 1: Results of Monte Carlo Simulation for parameter k.
+
+[![](index_files/figure-html/fig-blog-cir-output-2.png)](index_files/figure-html/fig-blog-cir-output-2.png "Figure 2: Results of Monte Carlo Simulation for parameter Theta.")
+
+Figure 2: Results of Monte Carlo Simulation for parameter Theta.
+
+[![](index_files/figure-html/fig-blog-cir-output-3.png)](index_files/figure-html/fig-blog-cir-output-3.png "Figure 3: Results of Monte Carlo Simulation for parameter Sigma.")
+
+Figure 3: Results of Monte Carlo Simulation for parameter Sigma.
+
 ### Conclusions and Real-World Application
+
 To summarise, this article has covered:
 
-1. Introduction to the CIR model
+1.  Introduction to the CIR model
 
-2. Implementation of OLS estimators for model calibration
+2.  Implementation of OLS estimators for model calibration
 
-3. Evaluation of estimator performance via Monte Carlo simulations
+3.  Evaluation of estimator performance via Monte Carlo simulations
 
-To conclude, let's include a final snippet code to apply the routine to real-world data. I will fetch the 13-week Treasury Bill Rate using the *yfinance* package and then apply the *ols_cir* function to calibrate the model. Here are a couple of insights on the code:
+To conclude, let’s include a final snippet code to apply the routine to real-world data. I will fetch the 13-week Treasury Bill Rate using the *yfinance* package and then apply the *ols_cir* function to calibrate the model. Here are a couple of insights on the code:
 
 - Data covers all of 2023
 - Following convention, dt is set to 1/252 since there are approximately 252 trading days in a year, and interest rates are expressed in annual terms
 
-```{python}
+``` python
 import tidyfinance as tf
 
 # Ticker symbol for US interest rate
@@ -269,3 +230,13 @@ dt = 1/252
 estimates = ols_cir(interest_rate_data.values, dt)
 print(f"The estimates are: k={round(estimates[0], 3)}, theta={round(estimates[1], 3)}, sigma={round(estimates[2], 3)}")
 ```
+
+    The estimates are: k=6.442, theta=0.052, sigma=0.03
+
+## Footnotes
+
+[^1]: Cox, J. C., Ingersoll Jr, J. E., & Ross, S. A. (1985). A Theory of the Term Structure of Interest Rates. Econometrica, 53(2), 385-408. [Link.](https://www.worldscientific.com/doi/abs/10.1142/9789812701022_0005)
+
+[^2]: Vasicek, O. (1977). An equilibrium characterization of the term structure. Journal of financial economics, 5(2), 177-188. [Link.](https://doi.org/10.1016/0304-405X(77)90016-2)
+
+[^3]: Orlando, G., Mininni, R. M., and Bufalo, M. (2020). Forecasting interest rates through vasicek and cir models: A partitioning approach. Journal of Forecasting, 39(4):569–579. [Link.](https://doi.org/10.1002/for.2642)
