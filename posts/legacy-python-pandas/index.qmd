@@ -21,8 +21,7 @@ description: >
   and Python editions into unified chapters. For reference, this post archives
   the complete rendered output of the previous pandas edition. It is no longer
   maintained.
-image: thumbnail.jpg
-image-alt: "Cover of Tidy Finance with Python, marked as an archived edition."
+image: /assets/img/cover.png
 categories:
   - Python
   - Data

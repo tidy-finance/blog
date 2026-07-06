@@ -7,8 +7,7 @@ author:
       - name: University of Copenhagen and Danish Finance Institute (DFI)
 date: "2024-06-17"
 description: A partial replication of the paper *Empirical Asset Pricing via Machine Learning* using R.
-image: thumbnail.jpg
-image-alt: Two abstract horse silhouettes, depicted with graceful, sweeping brushstrokes, emerge from a misty gray background. The minimalistic strokes capture the essence of movement and speed, evoking a sense of mystery and tranquility reminiscent of Japanese calligraphy. Created with Copilot.
+image: /assets/img/cover.png
 categories: 
   - R
   - Replications

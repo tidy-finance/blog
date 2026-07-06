@@ -2,168 +2,142 @@
 
 Experimental and external contributions based on *Tidy Finance with R*. [Contribute](https://www.tidy-finance.org/support.html) your ideas!
 
-![Cover of Tidy Finance with Python, marked as an archived edition.](./posts/legacy-python-pandas/thumbnail.jpg)
+### [The legacy pandas edition of Tidy Finance with Python (unmaintained archive)](posts/legacy-python-pandas/index.llms.md)
 
-##### The legacy pandas edition of Tidy Finance with Python (unmaintained archive)
-
-2 min
-
-We migrated Tidy Finance with Python from pandas to polars and merged the R and Python editions into unified chapters. For reference, this post archives the complete…
-
-Christoph Scheuch, Stefan Voigt, Patrick Weiss
+We migrated Tidy Finance with Python from pandas to polars and merged the R and Python editions into unified chapters. For reference, this post archives the complete rendered output of the previous pandas edition. It is no longer maintained.
 
 Jun 19, 2026
 
-##### High-Frequency Market Data: lobsteR and 20 Years of SPY on Hugging Face
+Christoph Scheuch, Stefan Voigt, Patrick Weiss
 
-8 min
+2 min
+
+### [High-Frequency Market Data: lobsteR and 20 Years of SPY on Hugging Face](posts/hf-and-hugging-face/index.llms.md)
 
 Announcing lobsteR, an R package for LOBSTER high-frequency data, and seamless access to 20 years of 5-second SPY trading data via tidyfinance.
 
-Stefan Voigt
-
 Mar 15, 2026
 
-![Illustration showing a data conversion workflow: a database icon with a blue feather on the left, a glowing arrow in the center, and a Parquet file icon labeled ‘.parquet’ on the right, set against a split digital background with cool green-blue tones on the left and warm orange tones on the right.](./posts/sql-legacy-version/thumbnail.png)
+Stefan Voigt
 
-##### Tidy Finance migrates from SQLite to Parquet
+8 min
 
-5 min
+### [Tidy Finance migrates from SQLite to Parquet](posts/sql-legacy-version/sql-legacy-version.llms.md)
 
 Parquet dramatically improves performance and cross-programming language consistency.
 
-Christoph Scheuch, Stefan Voigt, Patrick Weiss, Christoph Frey
-
 Feb 2, 2026
 
-![](./posts/iss-shareholder-proposals/thumbnail.png)
-
-##### ISS Shareholder Proposals
-
-21 min
-
-Code for preparing ISS Voting Analytics data for further analysis on shareholder proposals
-
-Alexander Pasler, Moritz Rodenkirchen
-
-Jun 13, 2025
-
-![Logo of the lobsteR R package for downloading and cleaning LOBSTER high-frequency order book data](./posts/hf-and-lobster/logo.png)
-
-##### lobsteR package and high-frequency data
-
-12 min
-
-Introducing the lobsteR package and tidy cleaning procedures in R for LOBSTER high-frequency data
-
-Stefan Voigt
-
-Mar 15, 2025
-
-![Two abstract horse silhouettes, depicted with graceful, sweeping brushstrokes, emerge from a misty gray background. The minimalistic strokes capture the essence of movement and speed, evoking a sense of mystery and tranquility reminiscent of Japanese calligraphy. Created with Copilot.](./posts/gu-kelly-xiu-replication/thumbnail.jpg)
-
-##### Replicating Gu, Kelly & Xiu (2020)
-
-20 min
-
-A partial replication of the paper *Empirical Asset Pricing via Machine Learning* using R.
-
-Stefan Voigt
-
-Jun 17, 2024
-
-![A vibrant outdoor scene under a clear, sunny sky, where a group of workers assemble a futuristic machine. The machine, situated in the center, features a complex design with gears and levers but no visible numbers or text. A colorful line chart representing an interest rate time series floats in the air, created by the machine. The chart consists of smooth, winding lines in various colors against a clear background. The workers are dressed in casual attire, and the landscape includes green grass and a few trees, contributing to the overall cheerful ambiance. Created with DALL-E 3.](./posts/cir-calibration/thumbnail.jpeg)
-
-##### CIR Model Calibration using Python
-
-10 min
-
-Routine to calibrate the Cox-Ingersoll-Ross model
-
-Yuri Antonelli
-
-Apr 3, 2024
-
-![A split-screen illustration that shows old, worn-out, and faded financial papers, charts, and documents, characterized by a tattered appearance, yellowed by time, and cluttered arrangement, symbolizing traditional and outdated methods of financial management and analysis on the left side This contrast highlights the evolution of financial documentation towards more modern practices on the right side. Created with DALL-E.](./posts/crsp-v2-update/thumbnail.png)
-
-##### CRSP 2.0 Update
+Christoph Scheuch, Stefan Voigt, Patrick Weiss, Christoph Frey
 
 5 min
 
-The highlights of the recent switch to CRSP 2.0 data
+### [ISS Shareholder Proposals](posts/iss-shareholder-proposals/index.llms.md)
 
-Patrick Weiss, Christoph Scheuch, Stefan Voigt, Christoph Frey
+Code for preparing ISS Voting Analytics data for further analysis on shareholder proposals
+
+Jun 13, 2025
+
+Alexander Pasler, Moritz Rodenkirchen
+
+21 min
+
+### [lobsteR package and high-frequency data](posts/hf-and-lobster/index.llms.md)
+
+Introducing the lobsteR package and tidy cleaning procedures in R for LOBSTER high-frequency data
+
+Mar 15, 2025
+
+Stefan Voigt
+
+12 min
+
+### [Replicating Gu, Kelly & Xiu (2020)](posts/gu-kelly-xiu-replication/index.llms.md)
+
+A partial replication of the paper *Empirical Asset Pricing via Machine Learning* using R.
+
+Jun 17, 2024
+
+Stefan Voigt
+
+20 min
+
+### [CIR Model Calibration using Python](posts/cir-calibration/index.llms.md)
+
+Routine to calibrate the Cox-Ingersoll-Ross model
+
+Apr 3, 2024
+
+Yuri Antonelli
+
+10 min
+
+### [CRSP 2.0 Update](posts/crsp-v2-update/index.llms.md)
+
+The highlights of the recent switch to CRSP 2.0 data
 
 Mar 13, 2024
 
-![Cartoon of robots and humans trying to make sense of green stock price charts on black background. Created with DALL-E 3.](./posts/tidy-market-microstructure/thumbnail.jpeg)
+Patrick Weiss, Christoph Scheuch, Stefan Voigt, Christoph Frey
 
-##### Tidy Market Microstructure
+5 min
 
-76 min
+### [Tidy Market Microstructure](posts/tidy-market-microstructure/index.llms.md)
 
 A beginner’s guide to market quality measurement in high-frequency data using R.
 
-Björn Hagströmer, Niklas Landsberg
-
 Jan 4, 2024
 
-![A realistic yellow duck standing in front of a large, futuristic database server. The server is tall, with glowing lights and complex wiring, symbolizing advanced technology. The setting is a high-tech data center, with rows of similar servers in the background. The duck is curiously looking at the server, creating a humorous contrast between nature and technology. The lighting is bright, highlighting the duck and the intricate details of the database server. Created with DALL-E 3.](./posts/using-duckdb-with-wrds/thumbnail.png)
+Björn Hagströmer, Niklas Landsberg
 
-##### Using DuckDB with WRDS Data
+76 min
 
-9 min
+### [Using DuckDB with WRDS Data](posts/using-duckdb-with-wrds/index.llms.md)
 
 Demonstrate the power of DuckDB and dbplyr with WRDS data.
 
-Ian Gow
-
 Dec 22, 2023
 
-![A 3D computer-rendered image of two stylized high rise office buildings, one small building and one large building, both buildings visible in the frame. Created with DALL-E 3.](./posts/fama-french-three-vs-five-factors/thumbnail.png)
+Ian Gow
 
-##### Comparing Fama-French Three vs Five Factors
+9 min
 
-7 min
+### [Comparing Fama-French Three vs Five Factors](posts/fama-french-three-vs-five-factors/index.llms.md)
 
 An explanation for the difference in the size factors of Fama and French 3 and 5 factor data
 
-Christoph Scheuch
-
 Oct 2, 2023
 
-![A 3D computer-rendered image of a stylized bar with the name BOND on a street in the style of New York of the 1960s.](./posts/convert-raw-trace-data/thumbnail.png)
-
-##### Convert Raw TRACE Data to a Local SQLite Database
-
-37 min
-
-An R code that converts TRACE files from FINRA into a SQLite for facilitated analysis and filtering
-
-Kevin Riehl, Lukas Müller
-
-Jun 14, 2023
-
-![Imagine a large, bustling research center. In the center, there&#039;s a colossal pile of papers, representing various studies and results. Around this pile, hundreds of researchers of diverse descents and genders are busily submitting their findings. Some are in lab coats, others in business casual attire, reflecting a variety of scientific and academic fields. The scene is a hive of activity, with researchers exchanging notes, discussing their work, and adding their papers to the pile. The background shows a modern research facility with computers, lab equipment, and bookshelves. Created with DALL-E 3.](./posts/nse-portfolio-sorts/thumbnail.jpeg)
-
-##### Non-Standard Errors in Portfolio Sorts
-
-39 min
-
-An all-in-one implementation of non-standard errors in portfolio sorts
-
-Patrick Weiss
-
-May 10, 2023
-
-![A 3D computer-rendered image of a historical stock exchange building. Created with DALL-E 3.](./posts/historical-sp-500-total-return/thumbnail.png)
-
-##### Construction of a Historical S&P 500 Total Return Index
+Christoph Scheuch
 
 7 min
 
+### [Convert Raw TRACE Data to a Local SQLite Database](posts/convert-raw-trace-data/index.llms.md)
+
+An R code that converts TRACE files from FINRA into a SQLite for facilitated analysis and filtering
+
+Jun 14, 2023
+
+Kevin Riehl, Lukas Müller
+
+37 min
+
+### [Non-Standard Errors in Portfolio Sorts](posts/nse-portfolio-sorts/index.llms.md)
+
+An all-in-one implementation of non-standard errors in portfolio sorts
+
+May 10, 2023
+
+Patrick Weiss
+
+38 min
+
+### [Construction of a Historical S&P 500 Total Return Index](posts/historical-sp-500-total-return/index.llms.md)
+
 An approximation of total returns using Robert Shiller’s stock market data
+
+Feb 15, 2023
 
 Christoph Scheuch
 
-Feb 15, 2023
+7 min

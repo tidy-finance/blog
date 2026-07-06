@@ -8,8 +8,7 @@ author:
       - name: WU Vienna University of Economics and Business
 date: "2023-05-10"
 description: An all-in-one implementation of non-standard errors in portfolio sorts
-image: thumbnail.jpeg
-image-alt: "Imagine a large, bustling research center. In the center, there's a colossal pile of papers, representing various studies and results. Around this pile, hundreds of researchers of diverse descents and genders are busily submitting their findings. Some are in lab coats, others in business casual attire, reflecting a variety of scientific and academic fields. The scene is a hive of activity, with researchers exchanging notes, discussing their work, and adding their papers to the pile. The background shows a modern research facility with computers, lab equipment, and bookshelves. Created with DALL-E 3."
+image: /assets/img/cover.png
 categories: 
   - Replications
   - R
@@ -1030,64 +1029,6 @@ data_premia |>
     x = "Premium (in %, p.m.)",
     y = NULL
   )
-```
-
-```{r}
-#| include: false
-#| eval: false
-q25 <- quantile(data_premia$premium_estimate, 0.25)
-q75 <- quantile(data_premia$premium_estimate, 0.75)
-
-highlight <- tibble(
-  x = density(data_premia$premium_estimate)$x,
-  y = density(data_premia$premium_estimate)$y
-) |>
-  filter(x > q25 & x < q75) |>
-  mutate(y = y - 0.01)
-
-nse_thumbnail <- data_premia |>
-  unnest(premium_estimate) |>
-  ggplot() +
-  theme_bw() +
-  theme(
-    panel.border = element_blank(),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.line = element_line(colour = "black")
-  ) +
-  geom_density(aes(x = premium_estimate),
-    alpha = 0.25,
-    linewidth = 1.2,
-    color = "#3B9AB2",
-    fill = "#3B9AB2"
-  ) +
-  labs(
-    x = NULL,
-    y = NULL
-  ) +
-  geom_ribbon(
-    data = highlight,
-    aes(x = x, ymax = y),
-    ymin = 0,
-    fill = "#EBCC2A",
-    alpha = 0.5
-  ) +
-  annotate("text",
-    x = 1.1, y = 1.7, label = "Non-Standard Errors",
-    color = "#E1AF00", size = 10
-  ) +
-  annotate("text",
-    x = 1.25, y = 1.35, label = "In Portfolio Sorts",
-    color = "#E1AF00", size = 10
-  )
-
-ggsave(
-  plot = nse_thumbnail,
-  width = 7,
-  height = 4,
-  filename = "blog/nse_portfolio_sorts/thumbnail.jpg",
-  bg = "white"
-)
 ```
 
 You can immediately see one of the results in Walter, Weber, and Weiss (2023): There is a lot of variation depending on your choices. However, despite the variation, the premium is always positive. I would argue that this is a pretty strong sign.

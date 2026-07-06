@@ -21,8 +21,7 @@ author:
       - name: Centre for Financial Econometrics, Asset Markets and Macroeconomic Policy at Lancaster University
 date: "2024-03-13"
 description: The highlights of the recent switch to CRSP 2.0 data
-image: thumbnail.png
-image-alt: A split-screen illustration that shows old, worn-out, and faded financial papers, charts, and documents, characterized by a tattered appearance, yellowed by time, and cluttered arrangement, symbolizing traditional and outdated methods of financial management and analysis on the left side This contrast highlights the evolution of financial documentation towards more modern practices on the right side. Created with DALL-E.
+image: /assets/img/cover.png
 categories: 
   - Data
   - R

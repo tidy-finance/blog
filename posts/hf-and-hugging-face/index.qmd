@@ -2,6 +2,7 @@
 title: "High-Frequency Market Data: lobsteR and 20 Years of SPY on Hugging Face"
 author: Stefan Voigt
 date: 2026-03-15
+image: /assets/img/cover.png
 description: "Announcing lobsteR, an R package for LOBSTER high-frequency data, and seamless access to 20 years of 5-second SPY trading data via tidyfinance."
 categories:
   - R

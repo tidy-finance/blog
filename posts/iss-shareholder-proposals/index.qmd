@@ -10,7 +10,7 @@ author:
     affiliations:
       - name: WU Vienna University of Economics and Business
 date: "2025-06-13"
-image: thumbnail.png
+image: /assets/img/cover.png
 description: Code for preparing ISS Voting Analytics data for further analysis on shareholder proposals
 draft: false
 bibliography: iss_bibliography.bib

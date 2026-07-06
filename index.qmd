@@ -4,8 +4,8 @@ title: "Tidy Finance Blog"
 listing:
   contents: posts
   sort: "date desc"
-  type: grid
-  fields: [image, categories, description, date, title, author, reading-time]
+  type: default
+  fields: [categories, description, date, title, author, reading-time]
   categories: true
   sort-ui: false
   filter-ui: false

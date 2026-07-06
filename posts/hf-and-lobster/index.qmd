@@ -7,8 +7,7 @@ categories:
   - R
   - Data
   - Market microstructure
-image: logo.png
-image-alt: "Logo of the lobsteR R package for downloading and cleaning LOBSTER high-frequency order book data"
+image: /assets/img/cover.png
 execute: 
   warning: false
 ---

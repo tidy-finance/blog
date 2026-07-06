@@ -30,7 +30,7 @@
   <category>Data</category>
   <guid>https://blog.tidy-finance.org/posts/legacy-python-pandas/</guid>
   <pubDate>Thu, 18 Jun 2026 22:00:00 GMT</pubDate>
-  <media:content url="https://blog.tidy-finance.org/posts/legacy-python-pandas/thumbnail.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://blog.tidy-finance.org/assets/img/cover.png" medium="image" type="image/png" height="86" width="144"/>
 </item>
 <item>
   <title>High-Frequency Market Data: lobsteR and 20 Years of SPY on Hugging Face</title>
@@ -42,6 +42,7 @@
   <category>Market microstructure</category>
   <guid>https://blog.tidy-finance.org/posts/hf-and-hugging-face/</guid>
   <pubDate>Sat, 14 Mar 2026 23:00:00 GMT</pubDate>
+  <media:content url="https://blog.tidy-finance.org/assets/img/cover.png" medium="image" type="image/png" height="86" width="144"/>
 </item>
 <item>
   <title>Tidy Finance migrates from SQLite to Parquet</title>
@@ -56,7 +57,7 @@
   <category>Python</category>
   <guid>https://blog.tidy-finance.org/posts/sql-legacy-version/sql-legacy-version.html</guid>
   <pubDate>Sun, 01 Feb 2026 23:00:00 GMT</pubDate>
-  <media:content url="https://blog.tidy-finance.org/posts/sql-legacy-version/thumbnail.png" medium="image" type="image/png" height="144" width="144"/>
+  <media:content url="https://blog.tidy-finance.org/assets/img/cover.png" medium="image" type="image/png" height="86" width="144"/>
 </item>
 <item>
   <title>ISS Shareholder Proposals</title>
@@ -68,7 +69,7 @@
   <category>R</category>
   <guid>https://blog.tidy-finance.org/posts/iss-shareholder-proposals/</guid>
   <pubDate>Thu, 12 Jun 2025 22:00:00 GMT</pubDate>
-  <media:content url="https://blog.tidy-finance.org/posts/iss-shareholder-proposals/thumbnail.png" medium="image" type="image/png" height="96" width="144"/>
+  <media:content url="https://blog.tidy-finance.org/assets/img/cover.png" medium="image" type="image/png" height="86" width="144"/>
 </item>
 <item>
   <title>lobsteR package and high-frequency data</title>
@@ -80,7 +81,7 @@
   <category>Market microstructure</category>
   <guid>https://blog.tidy-finance.org/posts/hf-and-lobster/</guid>
   <pubDate>Fri, 14 Mar 2025 23:00:00 GMT</pubDate>
-  <media:content url="https://blog.tidy-finance.org/posts/hf-and-lobster/logo.png" medium="image" type="image/png" height="167" width="144"/>
+  <media:content url="https://blog.tidy-finance.org/assets/img/cover.png" medium="image" type="image/png" height="86" width="144"/>
 </item>
 <item>
   <title>Replicating Gu, Kelly &amp; Xiu (2020)</title>
@@ -92,7 +93,7 @@
   <category>Machine learning</category>
   <guid>https://blog.tidy-finance.org/posts/gu-kelly-xiu-replication/</guid>
   <pubDate>Sun, 16 Jun 2024 22:00:00 GMT</pubDate>
-  <media:content url="https://blog.tidy-finance.org/posts/gu-kelly-xiu-replication/thumbnail.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://blog.tidy-finance.org/assets/img/cover.png" medium="image" type="image/png" height="86" width="144"/>
 </item>
 <item>
   <title>CIR Model Calibration using Python</title>
@@ -103,7 +104,7 @@
   <category>Python</category>
   <guid>https://blog.tidy-finance.org/posts/cir-calibration/</guid>
   <pubDate>Tue, 02 Apr 2024 22:00:00 GMT</pubDate>
-  <media:content url="https://blog.tidy-finance.org/posts/cir-calibration/thumbnail.jpeg" medium="image" type="image/jpeg"/>
+  <media:content url="https://blog.tidy-finance.org/assets/img/cover.png" medium="image" type="image/png" height="86" width="144"/>
 </item>
 <item>
   <title>CRSP 2.0 Update</title>
@@ -118,7 +119,7 @@
   <category>Python</category>
   <guid>https://blog.tidy-finance.org/posts/crsp-v2-update/</guid>
   <pubDate>Tue, 12 Mar 2024 23:00:00 GMT</pubDate>
-  <media:content url="https://blog.tidy-finance.org/posts/crsp-v2-update/thumbnail.png" medium="image" type="image/png" height="144" width="144"/>
+  <media:content url="https://blog.tidy-finance.org/assets/img/cover.png" medium="image" type="image/png" height="86" width="144"/>
 </item>
 <item>
   <title>Tidy Market Microstructure</title>
@@ -131,7 +132,7 @@
   <category>data.table</category>
   <guid>https://blog.tidy-finance.org/posts/tidy-market-microstructure/</guid>
   <pubDate>Wed, 03 Jan 2024 23:00:00 GMT</pubDate>
-  <media:content url="https://blog.tidy-finance.org/posts/tidy-market-microstructure/thumbnail.jpeg" medium="image" type="image/jpeg"/>
+  <media:content url="https://blog.tidy-finance.org/assets/img/cover.png" medium="image" type="image/png" height="86" width="144"/>
 </item>
 <item>
   <title>Using DuckDB with WRDS Data</title>
@@ -142,7 +143,7 @@
   <category>R</category>
   <guid>https://blog.tidy-finance.org/posts/using-duckdb-with-wrds/</guid>
   <pubDate>Thu, 21 Dec 2023 23:00:00 GMT</pubDate>
-  <media:content url="https://blog.tidy-finance.org/posts/using-duckdb-with-wrds/thumbnail.png" medium="image" type="image/png" height="144" width="144"/>
+  <media:content url="https://blog.tidy-finance.org/assets/img/cover.png" medium="image" type="image/png" height="86" width="144"/>
 </item>
 <item>
   <title>Comparing Fama-French Three vs Five Factors</title>
@@ -154,7 +155,7 @@
   <category>R</category>
   <guid>https://blog.tidy-finance.org/posts/fama-french-three-vs-five-factors/</guid>
   <pubDate>Sun, 01 Oct 2023 22:00:00 GMT</pubDate>
-  <media:content url="https://blog.tidy-finance.org/posts/fama-french-three-vs-five-factors/thumbnail.png" medium="image" type="image/png" height="144" width="144"/>
+  <media:content url="https://blog.tidy-finance.org/assets/img/cover.png" medium="image" type="image/png" height="86" width="144"/>
 </item>
 <item>
   <title>Convert Raw TRACE Data to a Local SQLite Database</title>
@@ -166,7 +167,7 @@
   <category>R</category>
   <guid>https://blog.tidy-finance.org/posts/convert-raw-trace-data/</guid>
   <pubDate>Tue, 13 Jun 2023 22:00:00 GMT</pubDate>
-  <media:content url="https://blog.tidy-finance.org/posts/convert-raw-trace-data/thumbnail.png" medium="image" type="image/png" height="144" width="144"/>
+  <media:content url="https://blog.tidy-finance.org/assets/img/cover.png" medium="image" type="image/png" height="86" width="144"/>
 </item>
 <item>
   <title>Non-Standard Errors in Portfolio Sorts</title>
@@ -177,7 +178,7 @@
   <category>R</category>
   <guid>https://blog.tidy-finance.org/posts/nse-portfolio-sorts/</guid>
   <pubDate>Tue, 09 May 2023 22:00:00 GMT</pubDate>
-  <media:content url="https://blog.tidy-finance.org/posts/nse-portfolio-sorts/thumbnail.jpeg" medium="image" type="image/jpeg"/>
+  <media:content url="https://blog.tidy-finance.org/assets/img/cover.png" medium="image" type="image/png" height="86" width="144"/>
 </item>
 <item>
   <title>Construction of a Historical S&amp;P 500 Total Return Index</title>
@@ -188,7 +189,7 @@
   <category>R</category>
   <guid>https://blog.tidy-finance.org/posts/historical-sp-500-total-return/</guid>
   <pubDate>Tue, 14 Feb 2023 23:00:00 GMT</pubDate>
-  <media:content url="https://blog.tidy-finance.org/posts/historical-sp-500-total-return/thumbnail.png" medium="image" type="image/png" height="144" width="144"/>
+  <media:content url="https://blog.tidy-finance.org/assets/img/cover.png" medium="image" type="image/png" height="86" width="144"/>
 </item>
 </channel>
 </rss>

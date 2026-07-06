@@ -11,8 +11,7 @@ author:
       - name: TU Darmstadt
 date: "2023-06-14"
 description: An R code that converts TRACE files from FINRA into a SQLite for facilitated analysis and filtering
-image: thumbnail.png
-image-alt: A 3D computer-rendered  image of a stylized bar with the name BOND on a street in the style of New York of the 1960s.
+image: /assets/img/cover.png
 categories: 
   - Data
   - R
