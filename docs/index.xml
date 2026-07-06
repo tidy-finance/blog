@@ -50,7 +50,7 @@
   <dc:creator>Patrick Weiss</dc:creator>
   <dc:creator>Christoph Frey</dc:creator>
   <link>https://blog.tidy-finance.org/posts/sql-legacy-version/sql-legacy-version.html</link>
-  <description><![CDATA[ tidyfinance 0.4.0 is now on CRAN. Discover the new data download options it includes. ]]></description>
+  <description><![CDATA[ Parquet dramatically improves performance and cross-programming language consistency. ]]></description>
   <category>Data</category>
   <category>R</category>
   <category>Python</category>

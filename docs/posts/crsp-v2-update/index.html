@@ -304,7 +304,7 @@ cookieconsent.run({
 <section id="overview-crsp-and-wrds" class="level2">
 <h2 class="anchored" data-anchor-id="overview-crsp-and-wrds">Overview: CRSP and WRDS</h2>
 <p>Tidy Finance shows how to download the most used data in empirical research in finance from the <a href="https://wrds-www.wharton.upenn.edu/">Wharton Research Data Services (WRDS)</a>. A main component of this data is the stock return history provided by the <a href="https://crsp.org/">Center for Research in Security Prices (CRSP)</a>. CRSP is the de-facto gold standard for stock return data covering historical returns from the 1920s until now.</p>
-<p>You can read all about how to connect to WRDS and download the CRSP data in our chapter <strong>WRDS, CRSP, and Compustat</strong> in the <a href="../../chapters/wrds-crsp-and-compustat.qmd">R version</a> and the <a href="../../chapters/wrds-crsp-and-compustat.qmd">Python version</a>.</p>
+<p>You can read all about how to connect to WRDS and download the CRSP data via R or Python in our chapter <a href="https://www.tidy-finance.org/chapters/wrds-crsp-and-compustat.html"><strong>WRDS, CRSP, and Compustat</strong></a>.</p>
 </section>
 <section id="crsp-format-2.0-ciz" class="level2">
 <h2 class="anchored" data-anchor-id="crsp-format-2.0-ciz">CRSP format 2.0 (CIZ)</h2>
@@ -322,63 +322,55 @@ cookieconsent.run({
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>msf_db <span class="ot">&lt;-</span> <span class="fu">tbl</span>(wrds, <span class="fu">in_schema</span>(<span class="st">"crsp"</span>, <span class="st">"msf_v2"</span>))</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>stksecurityinfohist_db <span class="ot">&lt;-</span> <span class="fu">tbl</span>(wrds, <span class="fu">in_schema</span>(<span class="st">"crsp"</span>, <span class="st">"stksecurityinfohist"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>We do not repost the new routines for downloading the data in this blog. Instead, we ask you to check out the new code in the respective chapter on <strong>WRDS, CRSP, and Compustat</strong> in the <a href="../../chapters/wrds-crsp-and-compustat.qmd">R version</a> and the <a href="../../chapters/wrds-crsp-and-compustat.qmd">Python version</a>.</p>
+<p>We do not repost the new routines for downloading the data in this blog. Instead, we ask you to check out the new code in the respective chapter on <a href="https://www.tidy-finance.org/chapters/wrds-crsp-and-compustat.html"><strong>WRDS, CRSP, and Compustat</strong></a>.</p>
 </section>
 <section id="a-small-glimpse-at-the-differences" class="level2">
 <h2 class="anchored" data-anchor-id="a-small-glimpse-at-the-differences">A small glimpse at the differences</h2>
-<p>To take a look at the new table and compare it to the old one, we use the new <code>tidyfinance</code> R package (see our recent blog post on the initial release <a href="../../docs/blog/r-tidyfinance-0-1-0/">here</a>) to download the data. If you do not have the package yet, please install it from CRAN using <code>install.packages("tidyfinance")</code>. For ease of use, we also load the full <code>tidyverse</code> as in all our chapters of the R book.</p>
+<p>To take a look at the new table and compare it to the old one, we use the new <code>tidyfinance</code> R package. If you do not have the package yet, please install it from CRAN using <code>install.packages("tidyfinance")</code>. For ease of use, we also load the full <code>tidyverse</code> as in all our chapters of the R book.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyfinance)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Then, we can download the two data formats using the function <code>download_data_wrds_crsp()</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>crsp_v1 <span class="ot">&lt;-</span> <span class="fu">download_data_wrds_crsp</span>(<span class="st">"crsp_monthly"</span>, </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">version =</span> <span class="st">"v1"</span>,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">start_date =</span> <span class="st">"1970-01-01"</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">end_date =</span> <span class="st">"2022-12-01"</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>crsp_v2 <span class="ot">&lt;-</span> <span class="fu">download_data_wrds_crsp</span>(<span class="st">"crsp_monthly"</span>, </span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">version =</span> <span class="st">"v2"</span>,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">start_date =</span> <span class="st">"1970-01-01"</span>,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">end_date =</span> <span class="st">"2022-12-01"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>crsp_v1 <span class="ot">&lt;-</span> <span class="fu">download_data_wrds_crsp</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"crsp_monthly"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">version =</span> <span class="st">"v1"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">start_date =</span> <span class="st">"1970-01-01"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">end_date =</span> <span class="st">"2022-12-01"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>crsp_v2 <span class="ot">&lt;-</span> <span class="fu">download_data_wrds_crsp</span>(</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"crsp_monthly"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">version =</span> <span class="st">"v2"</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">start_date =</span> <span class="st">"1970-01-01"</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">end_date =</span> <span class="st">"2022-12-01"</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now, do we find any significant differences between the data? Let us look at the number of observations identified by <code>permno</code> and <code>date</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(crsp_v2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 3131346</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(crsp_v1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 3106080</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(crsp_v2)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(crsp_v1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We see that the new data contains more rows. However, we are not sure where these observations come from or where we lost them in the old data. Let us see if the observations are actually matched for the identifiers with a <code>anti_join()</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anti_join</span>(crsp_v2, crsp_v1,</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">by =</span> <span class="fu">join_by</span>(<span class="st">"permno"</span>, <span class="st">"date"</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 25856</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anti_join</span>(crsp_v2, crsp_v1, <span class="at">by =</span> <span class="fu">join_by</span>(<span class="st">"permno"</span>, <span class="st">"date"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We find that roughly 4,000 observations are not matched. However, this is a very minor difference.</p>
 <p>Next, we check if the monthly returns are all the same. We compare the new returns to the adjusted returns from version 1.0 to account for delisting in both versions. In fact, these returns should be slightly different, as CRSP states that they have updated the way to compound distributions. They also state this change in compounding as an example, among other things. However, they do not yet provide more information about these <em>other</em> things.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">inner_join</span>(crsp_v2 <span class="sc">|&gt;</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>             <span class="fu">select</span>(permno, date, <span class="at">ret_new =</span> ret_excess), </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>           crsp_v1 <span class="sc">|&gt;</span> </span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>             <span class="fu">select</span>(permno, date, <span class="at">ret_old =</span> ret_excess),</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">by =</span> <span class="fu">join_by</span>(<span class="st">"permno"</span>, <span class="st">"date"</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ret_differences =</span> <span class="sc">!</span><span class="fu">near</span>(ret_new, ret_old, <span class="at">tol =</span> <span class="dv">10</span><span class="sc">^-</span><span class="dv">6</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">share_all_ret_differences =</span> <span class="fu">sum</span>(ret_differences, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">/</span> <span class="fu">n</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 1
-  share_all_ret_differences
-                      &lt;dbl&gt;
-1                     0.123</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">inner_join</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  crsp_v2 <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(permno, date, <span class="at">ret_new =</span> ret_excess),</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  crsp_v1 <span class="sc">|&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(permno, date, <span class="at">ret_old =</span> ret_excess),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="fu">join_by</span>(<span class="st">"permno"</span>, <span class="st">"date"</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ret_differences =</span> <span class="sc">!</span><span class="fu">near</span>(ret_new, ret_old, <span class="at">tol =</span> <span class="dv">10</span><span class="sc">^-</span><span class="dv">6</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">share_all_ret_differences =</span> <span class="fu">sum</span>(ret_differences, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">/</span> <span class="fu">n</span>()</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Indeed, we see that not all returns are exactly matched.</p>
 </section>

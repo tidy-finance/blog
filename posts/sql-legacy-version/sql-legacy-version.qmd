@@ -20,7 +20,7 @@ author:
     affiliation:
       - name: Centre for Financial Econometrics, Asset Markets and Macroeconomic Policy at Lancaster University
 date: "2026-02-02"
-description: tidyfinance 0.4.0 is now on CRAN. Discover the new data download options it includes. 
+description: Parquet dramatically improves performance and cross-programming language consistency. 
 image: thumbnail.png
 image-alt: "Illustration showing a data conversion workflow: a database icon with a blue feather on the left, a glowing arrow in the center, and a Parquet file icon labeled ‘.parquet’ on the right, set against a split digital background with cool green-blue tones on the left and warm orange tones on the right."
 categories: 

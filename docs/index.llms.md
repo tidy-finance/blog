@@ -30,7 +30,7 @@ Mar 15, 2026
 
 5 min
 
-tidyfinance 0.4.0 is now on CRAN. Discover the new data download options it includes.
+Parquet dramatically improves performance and cross-programming language consistency.
 
 Christoph Scheuch, Stefan Voigt, Patrick Weiss, Christoph Frey
 
