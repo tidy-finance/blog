@@ -65,6 +65,7 @@ website:
     palette: light
   navbar:
     logo: assets/img/logo-website-white.png
+    logo-href: https://www.tidy-finance.org
     pinned: false
     left:
       - href: https://www.tidy-finance.org/chapters/index.html
