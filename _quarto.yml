@@ -67,7 +67,7 @@ website:
     logo: assets/img/logo-website-white.png
     pinned: false
     left:
-      - href: https://www.tidy-finance.org/chapters/index.qmd
+      - href: https://www.tidy-finance.org/chapters/index.html
         text: Chapters
       - href: index.qmd
         text: Blog
@@ -75,7 +75,7 @@ website:
         text: Support
       - href: https://talks.tidy-finance.org
         text: Talks
-      - href: https://www.tidy-finance.org/workshops/reproducible-research-workflows.qmd
+      - href: https://www.tidy-finance.org/workshops/reproducible-research-workflows.html
         text: Workshops
       
 editor: source
