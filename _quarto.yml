@@ -74,9 +74,5 @@ website:
         text: Blog
       - href: https://www.tidy-finance.org/support.html
         text: Support
-      - href: https://talks.tidy-finance.org
-        text: Talks
-      - href: https://www.tidy-finance.org/workshops/reproducible-research-workflows.html
-        text: Workshops
       
 editor: source
