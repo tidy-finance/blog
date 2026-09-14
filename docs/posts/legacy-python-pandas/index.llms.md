@@ -3,7 +3,7 @@
 > The pages linked below are a **frozen snapshot** of the original *pandas* edition of *Tidy Finance with Python*, captured in June 2026. They are provided **for reference only**:
 >
 > - The code is **no longer maintained** and may not run with current versions of `pandas`, `numpy`, or our data providers.
-> - The **maintained edition** — covering both R and Python (now using [polars](https://pola.rs/)) in unified chapters — lives at [tidy-finance.org/chapters](../../chapters/working-with-stock-returns.llms.md).
+> - The **maintained edition** — covering both R and Python (now using [polars](https://pola.rs/)) in unified chapters — lives at [tidy-finance.org/chapters](../..\chapters/working-with-stock-returns.llms.md).
 > - Only the rendered output is preserved here; the original `.qmd` sources are not kept.
 
 ## Why we changed
