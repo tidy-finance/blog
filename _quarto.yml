@@ -66,7 +66,9 @@ website:
   navbar:
     logo: assets/img/logo-website-white.png
     logo-href: https://www.tidy-finance.org
-    pinned: false
+    # The website never auto-hides its navbar (its pinned sidebar disables
+    # Quarto's headroom); pin it here so the blog header behaves the same.
+    pinned: true
     left:
       - href: https://www.tidy-finance.org/chapters/index.html
         text: Chapters
