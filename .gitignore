@@ -18,6 +18,8 @@ renv/renv_location.R
 *.RData
 *.rdx
 *.parquet
+# aggregated 1-second SPY data for the flash crash figure (no raw LOBSTER data)
+!posts/hf-and-lobster/SPY_2010-05-06_1s.parquet
 *.quarto_ipynb
 **/*.quarto_ipynb
 config.yaml
