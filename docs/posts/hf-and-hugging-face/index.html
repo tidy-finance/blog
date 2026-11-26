@@ -2,23 +2,26 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.11.9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Stefan Voigt">
 <meta name="dcterms.date" content="2026-03-15">
-<meta name="description" content="Announcing lobsteR, an R package for LOBSTER high-frequency data, and seamless access to 20 years of 5-second SPY trading data via tidyfinance.">
+<meta name="description" content="Announcing lobsteR, an R package for LOBSTER high-frequency data, and access to almost 20 years of 5-second SPY trading data via tidyfinance.">
 
 <title>High-Frequency Market Data: lobsteR and 20 Years of SPY on Hugging Face – Tidy Finance</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -75,14 +78,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-15df67a978eff2724f248dfecb6ea2b0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-3db3fb4ce70afe42de88d7a4e34244f4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -139,50 +146,21 @@ cookieconsent.run({
   
 <style>html{ scroll-behavior: smooth; }</style>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../assets/css/global.css">
 <meta property="og:title" content="High-Frequency Market Data: lobsteR and 20 Years of SPY on Hugging Face – Tidy Finance">
-<meta property="og:description" content="Announcing lobsteR, an R package for LOBSTER high-frequency data, and seamless access to 20 years of 5-second SPY trading data via tidyfinance.">
+<meta property="og:description" content="Announcing lobsteR, an R package for LOBSTER high-frequency data, and access to almost 20 years of 5-second SPY trading data via tidyfinance.">
 <meta property="og:image" content="https://blog.tidy-finance.org/assets/img/cover.png">
 <meta property="og:site_name" content="Tidy Finance">
 <meta property="og:image:height" content="1800">
 <meta property="og:image:width" content="3000">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="https://www.tidy-finance.org" class="navbar-brand navbar-brand-logo">
@@ -193,8 +171,7 @@ window.Quarto = {
     <span class="navbar-title">Tidy Finance</span>
     </a>
   </div>
-            <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -215,6 +192,7 @@ window.Quarto = {
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
 </div>
+            <div id="quarto-search" class="" title="Search"></div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -225,7 +203,7 @@ window.Quarto = {
       <h1 class="title">High-Frequency Market Data: lobsteR and 20 Years of SPY on Hugging Face</h1>
                   <div>
         <div class="description">
-          Announcing lobsteR, an R package for LOBSTER high-frequency data, and seamless access to 20 years of 5-second SPY trading data via tidyfinance.
+          Announcing lobsteR, an R package for LOBSTER high-frequency data, and access to almost 20 years of 5-second SPY trading data via tidyfinance.
         </div>
       </div>
                           <div class="quarto-categories">
@@ -253,6 +231,12 @@ window.Quarto = {
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">November 26, 2026</p>
+      </div>
+    </div>
       
     </div>
     
@@ -261,7 +245,7 @@ window.Quarto = {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
@@ -271,169 +255,220 @@ window.Quarto = {
 <div class="toc-actions"><ul><li><a href="https://github.com/tidy-finance/blog/blob/main/posts/hf-and-hugging-face/index.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content" tabindex="-1">
 
 
 
 
 
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Updated 26 November 2026
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The dataset on Hugging Face has a new version (<a href="https://huggingface.co/datasets/voigtstefan/sp500/blob/c06c532ae041037fe7ad7b855b2b416cc0dcc6e4/README.md">revision c06c532</a>). It was rebuilt with the corrected cleaning code of <code>lobsteR</code>, which fixes the signed volume (hidden trades exactly at the midquote set it to zero before), now runs from June 27, 2007 to November 23, 2026, and has five new columns; the dataset card lists all changes. This post now describes the columns as they are in the files, and the case study below uses the new version.</p>
+</div>
+</div>
 <p>In a <a href="../../posts/hf-and-lobster/index.html">companion blog post</a>, we introduced <a href="https://voigtstefan.github.io/lobsteR/">lobsteR</a>, a new R package for downloading and cleaning high-frequency order book data from <a href="https://lobsterdata.com/">LOBSTER</a>. This second post focuses on the public dataset we released alongside our working paper <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6298780">Market responses to a VIX shock</a> with <a href="https://homepage.univie.ac.at/nikolaus.hautsch/">Nikolaus Hautsch</a> and <a href="https://albertjmenkveld.com/">Albert J. Menkveld</a>.</p>
-<p>This is part two of two blog posts in which we announce and explain two major updates to the <a href="https://tidy-finance.org">tidy-finance.org</a> ecosystem:</p>
+<p>This is part two of two blog posts in which we announce and explain two updates to the <a href="https://tidy-finance.org">tidy-finance.org</a> ecosystem:</p>
 <ol type="1">
-<li><code>lobsteR</code> is a novel R package to request and download high-frequency orderbook snapshot data from <a href="https://lobsterdata.com/">LOBSTER</a>. We provide a short vignette on how to use the package in the <a href="../../posts/hf-and-lobster/index.html">first post</a>.</li>
-<li>Seamless access to a massive, 5-second level dataset on S&amp;P 500 index tracking ETF SPY via <code>tidyfinance::download_data("tidyfinance", "high_frequency_sp500", "2025-01-01", "2025-01-10")</code></li>
+<li><code>lobsteR</code> is an R package to request, download, and clean high-frequency order book data from <a href="https://lobsterdata.com/">LOBSTER</a>. We provide a short vignette on how to use the package in the <a href="../../posts/hf-and-lobster/index.html">first post</a>.</li>
+<li>Access to a 5-second dataset on the S&amp;P 500 index tracking ETF SPY via <code>tidyfinance::download_data(domain = "Tidy Finance", dataset = "high_frequency_sp500", start_date = "2025-01-01", end_date = "2025-01-10")</code>.</li>
 </ol>
 <section id="years-of-hf-data" class="level2">
 <h2 class="anchored" data-anchor-id="years-of-hf-data">20 years of HF data</h2>
 <p>In our paper “Market responses to a VIX shock”, <a href="https://homepage.univie.ac.at/nikolaus.hautsch/">Nikolaus Hautsch</a>, <a href="https://albertjmenkveld.com/">Albert J. Menkveld</a> and I investigated under the microscope how markets respond to a sudden increase in the VIX based on an exhaustive 2007-2025 sample of <em>all</em> NASDAQ trading messages for two exchange-traded funds (ETFs): SPY for the S&amp;P 500 equity index and TLT for government bonds.</p>
-<p>We collect message-level snapshots of the NASDAQ limit order book for the very actively traded S&amp;P 500 ETF SPY. For our analysis we retrieve and evaluate the entire available order book message history from July 1st, 2007 to October 31st, 2025 from data provider LOBSTER.</p>
-<p>Our sample contains a record for <em>each</em> message (submissions, adjustments, and cancellations of market and limit orders) and reconstructed snapshots of the complete order book for the first 50 levels.</p>
-<p>We restrict our analysis to order book activity during regular trading hours. The entire dataset comprises more than 30 billion order book messages and was evaluated using the procedures described in <a href="../../posts/hf-and-lobster/index.html">a previous post</a>.</p>
-<p>For a meaningful analysis, we aggregate the order book messages for each ticker into the following six variables, measured at 5-second intervals.</p>
+<p>The dataset we publish covers the very actively traded S&amp;P 500 ETF SPY. It is built from the entire order book message history that LOBSTER offers, from June 27, 2007 (the first day available) to November 23, 2026: 4,876 trading days.</p>
+<p>The raw data contain a record for <em>each</em> message, that is, every submission, partial cancellation, and deletion of a limit order and every execution of a visible or a hidden limit order, together with reconstructed snapshots of the complete order book for the first 50 levels. LOBSTER has no messages for market orders: a market order appears as the executions of the resting limit orders it hits.</p>
+<p>We restrict the data to continuous trading during regular trading hours, from 09:30 to 16:00 New York time (to the closing cross at 13:00 on early-close days). The files aggregate 24.5 billion order book messages of continuous trading, cleaned with the procedures described in the <a href="../../posts/hf-and-lobster/index.html">previous post</a>. For 85 days from 2019 on, the LOBSTER files end before the close: 78 of them are included as delivered, and 7 without any data are left out. The <a href="https://huggingface.co/datasets/voigtstefan/sp500">dataset card</a> lists them with the time of the last data.</p>
+<p>We aggregate the messages into the following variables, measured at 5-second intervals. Each trading day is one file with 4,680 rows, from 09:30:05 to 16:00:00 (2,521 rows, to 13:00:05, on early-close days).</p>
 <ul>
-<li>Initiator net volume (in million USD) which is the net of buyer and seller initiated shares transacted during the last 5-second interval. We sign transactions as +1 if executed against a sell-side limit order and -1 if executed against a buy-side limit order. For execution against a hidden limit order, we impose the sign +1 if the transaction executes at a price that exceeds the last observed midquote and -1 if the transaction price is below the last observed midquote. To make the values comparable across assets, we multiply the aggregate net number of traded shares with the rolling 12-month average midquote computed for each ticker.</li>
-<li>Return (in basis points) computed as <span class="math inline">\(\log(p_{t, \tau}) - \log(p_{t, \tau - 1})\)</span>, where <span class="math inline">\(t\)</span> corresponds to the trading day and 5-second time stamps are <span class="math inline">\(\tau \in\left\{0, \ldots, 78\right\}\)</span> which range from 09:30 a.m. (<span class="math inline">\(\tau = 0\)</span>) until 4:00 p.m. <span class="math inline">\(p_{t, \tau}\)</span> is the last observed midquote on day <span class="math inline">\(t\)</span> before time stamp <span class="math inline">\(\tau\)</span>.</li>
-<li>Trading volume (in million USD), which is the cumulative trading volume during each 5-second interval. We compute trading volume as the number of traded shares times the transaction price.</li>
-<li>Bid-ask spread (in basis points), computed as the time-weighted average difference between the best prices quoted at the sell and buy side of the order book during each 5-second interval. We compute the bid-ask spread relative to the current midquote for every order book snapshot.</li>
-<li>Depth (in million USD), measured as the number of posted shares in visible limit orders 5 basis points from the current best price on both sides of the order book. We take the time-weighted average depth during each interval to aggregate depth from message level into 5-second intervals. To make the values comparable across assets, we multiply the number of available shares with the rolling 12-month average midquote computed for each ticker.</li>
-<li>Amihud illiquidity measure, computed every five seconds as <span class="math inline">\(ILLIQ_{t, \tau} := {\left|\log(p_{t, \tau}) - \log(p_{t, \tau - 1})\right|}/{V_{t,\tau}}\)</span>. <span class="math inline">\(ILLIQ_{t, \tau}\)</span> corresponds to the absolute midquote log return divided by trading volume <span class="math inline">\(V_{t, \tau}\)</span> executed on NASDAQ (in million USD). High values indicate large price impacts per unit traded and are thus associated with illiquidity. In our empirical analysis, we set <span class="math inline">\(ILLIQ_{t, \tau}\)</span> to missing values for time stamps for which the trading volume is zero.</li>
+<li><code>ts</code>: the end of the 5-second interval. The time stamps hold New York clock time stored with a UTC label: 09:30:05 in New York is stored as 09:30:05 UTC.</li>
+<li><code>midquote</code> (in USD): the midpoint of the best bid and the best ask price at the end of the interval. During a trading halt, it keeps its last value.</li>
+<li><code>signed_volume</code> (in shares): initiator net volume, the number of buyer-initiated minus seller-initiated shares transacted during the interval. We sign transactions as +1 if executed against a sell-side limit order and -1 if executed against a buy-side limit order. For executions against a hidden limit order, we impose the sign +1 if the transaction price exceeds the midquote just before the trade and -1 if it is below. Hidden executions exactly at the midquote stay unsigned: they count in <code>trading_volume</code> and <code>midpoint_volume</code>, but not in <code>signed_volume</code>. <code>signed_volume</code> is missing in intervals without trades.</li>
+<li><code>trading_volume</code> (in USD): the cumulative trading volume during the interval, the number of traded shares times the transaction price, including unsigned trades.</li>
+<li><code>spread</code> (in basis points): the time-weighted average difference between the best ask and the best bid price during the interval, relative to the midquote of each order book snapshot.</li>
+<li><code>depth0_bid</code>, <code>depth0_ask</code> (in shares): the time-weighted average number of shares at the best bid and at the best ask.</li>
+<li><code>depth5_bid</code>, <code>depth5_ask</code> (in shares): the time-weighted average number of shares in visible limit orders within 5 basis points of the best price, on the bid and on the ask side of the order book.</li>
+<li><code>midpoint_volume</code> (in USD): the trading volume of hidden executions exactly at the midquote, the part of <code>trading_volume</code> without a sign.</li>
+<li><code>n_messages</code>, <code>n_trades</code>: the number of order book messages and of executions (visible and hidden) in the interval. Intervals with <code>n_messages</code> equal to 0 carry over the book state in force.</li>
+<li><code>halted</code>: true if the interval overlaps a trading halt. Spread and depth are missing in halted intervals, which affects the four market-wide halts of March 2020.</li>
+<li><code>depth5_truncated</code>: true if depth within 5 basis points may be cut short because the order book files hold only 50 levels. It is false in every interval.</li>
 </ul>
-<p>In order to process these massive amounts of data, we relied on one of Denmark’s largest supercomputing facilities. In order to render follow-up research feasible, we decided to make the aggregated data accessible on <a href="https://huggingface.co/datasets/voigtstefan/sp500">Hugging Face</a>, including a fast, easy and transparent connector via the <code>tidyfinance</code> library.</p>
+<p>In the paper, we aggregate these variables further to 5-minute intervals and express initiator net volume, trading volume, and depth in million USD: shares are multiplied by the median midquote of the previous 12 months. The paper also uses 5-minute midquote returns and the Amihud illiquidity measure, which are not part of the files.</p>
+<p>In order to process these amounts of data, we relied on one of Denmark’s largest supercomputing facilities. To make follow-up research feasible, we decided to make the aggregated data accessible on <a href="https://huggingface.co/datasets/voigtstefan/sp500">Hugging Face</a>, and they can be read directly with the <code>tidyfinance</code> package.</p>
 <p>All you need is the following call to <code>download_data</code>:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyfinance)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">download_data</span>(</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">domain =</span> <span class="st">"tidyfinance"</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">dataset =</span> <span class="st">"high_frequency_sp500"</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">start_date =</span> <span class="st">"2020-01-01"</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">end_date =</span> <span class="st">"2020-01-15"</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.1     ✔ readr     2.2.0
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+✔ purrr     1.2.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">download_data</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">domain =</span> <span class="st">"Tidy Finance"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">dataset =</span> <span class="st">"high_frequency_sp500"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">start_date =</span> <span class="st">"2020-01-01"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">end_date =</span> <span class="st">"2020-01-15"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 46,800 × 14
+   ts                  midquote signed_volume trading_volume depth0_ask
+   &lt;dttm&gt;                 &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt;      &lt;dbl&gt;
+ 1 2020-01-02 09:30:05     324.           438       5160652.       847.
+ 2 2020-01-02 09:30:10     324.          2955       1748767.       912.
+ 3 2020-01-02 09:30:15     324.          4222       2429054.       442.
+ 4 2020-01-02 09:30:20     324.         -3987       3548350.       946.
+ 5 2020-01-02 09:30:25     324.        -44889      16407684.      1157.
+ 6 2020-01-02 09:30:30     324.          -542       1649047.       651.
+ 7 2020-01-02 09:30:35     324.          4771       3479299.       815.
+ 8 2020-01-02 09:30:40     324.          2724       1478392.      1082.
+ 9 2020-01-02 09:30:45     324.           649        883830.       559.
+10 2020-01-02 09:30:50     324.          2549       1075559.       587.
+# ℹ 46,790 more rows
+# ℹ 9 more variables: depth0_bid &lt;dbl&gt;, depth5_ask &lt;dbl&gt;, depth5_bid &lt;dbl&gt;,
+#   spread &lt;dbl&gt;, midpoint_volume &lt;dbl&gt;, n_messages &lt;int&gt;, n_trades &lt;int&gt;,
+#   halted &lt;lgl&gt;, depth5_truncated &lt;lgl&gt;</code></pre>
+</div>
 </div>
 </section>
 <section id="a-simple-case-study" class="level2">
 <h2 class="anchored" data-anchor-id="a-simple-case-study">A simple case study</h2>
-<p>Suppose you are interested in high-frequency responses of the S&amp;P 500 index to FOMC announcements within a short window around the announcements. <a href="https://marekjarocinski.github.io/">Marek Jarocinski</a> at the ECB collected a long history of FOMC announcement dates (Source: Updating Monetary Policy and Central Bank Information shocks originally constructed in Jarocinski, M. and Karadi, P. (2020) Deconstructing Monetary Policy Surprises - The Role of Information Shocks, AEJ:Macro, DOI: http://doi.org/10.1257/mac.20180090), which we use for our case study.</p>
-<p>Note that we focus on a lot of data. In total, we record 324 central bank event dates. For each date, we could download 5-second level observations for the S&amp;P 500 tracking ETF SPY. Thus, the next code chunk downloads all dates for which FOMC announcements took place. We then download S&amp;P 500 data for a random subset of 50 such days.</p>
+<p>Suppose you are interested in high-frequency responses of the S&amp;P 500 index to FOMC announcements within a short window around the announcements. <a href="https://marekjarocinski.github.io/">Marek Jarocinski</a> at the ECB collected a long history of FOMC announcement dates and times (Source: Updating Monetary Policy and Central Bank Information shocks originally constructed in Jarocinski, M. and Karadi, P. (2020) Deconstructing Monetary Policy Surprises - The Role of Information Shocks, AEJ:Macro, DOI: http://doi.org/10.1257/mac.20180090), which we use for our case study.</p>
+<p>Note that we focus on a lot of data. In total, the file records 334 FOMC announcements since 1990, 168 of them between June 2007 and November 2026. For each of these dates, we could download 5-second level observations for the S&amp;P 500 tracking ETF SPY. Thus, the next code chunk downloads all dates for which FOMC announcements took place. We then download S&amp;P 500 data for a random subset of 50 such days. The announcement times are New York times, read as UTC by <code>read_csv()</code>, just like the time stamps of our dataset, so the two line up without any time-zone conversion.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>window_size <span class="ot">&lt;-</span> <span class="dv">30</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>central_bank_events <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://raw.githubusercontent.com/marekjarocinski/jkshocks_update_fed/main/shocks_fed_jk_t.csv"</span>,</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">show_col_types =</span> <span class="cn">FALSE</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">time =</span> start,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">start_ts =</span> start <span class="sc">-</span> <span class="fu">minutes</span>(window_size),</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">end_ts =</span> start <span class="sc">+</span> <span class="fu">minutes</span>(window_size)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Looping over many dates issues many requests to the Hugging Face API in</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># quick succession, which can trigger rate limiting (HTTP 429). We retry with</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># exponential backoff so that the download completes reliably within the limits.</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>download_hf_day <span class="ot">&lt;-</span> <span class="cf">function</span>(date, <span class="at">max_tries =</span> <span class="dv">8</span>) {</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (attempt <span class="cf">in</span> <span class="fu">seq_len</span>(max_tries)) {</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">download_data</span>(</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">"tidyfinance"</span>,</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">"high_frequency_sp500"</span>,</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">start_date =</span> date,</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">end_date =</span> date</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>      ),</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">error =</span> <span class="cf">function</span>(e) e</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">inherits</span>(result, <span class="st">"error"</span>)) {</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(result)</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Sys.sleep</span>(<span class="fu">min</span>(<span class="dv">2</span><span class="sc">^</span>attempt, <span class="dv">45</span>))</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">"Failed to download "</span>, date, <span class="st">" after "</span>, max_tries, <span class="st">" attempts: "</span>,</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>       <span class="fu">conditionMessage</span>(result))</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> central_bank_events <span class="sc">|&gt;</span></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(time)) <span class="sc">|&gt;</span></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">&gt;</span> <span class="st">"2006-07-27"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">50</span>) <span class="sc">|&gt;</span></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">map</span>(date, \(x) {</span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>      <span class="fu">Sys.sleep</span>(<span class="dv">2</span>)</span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>      <span class="fu">download_hf_day</span>(x)</span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>window_size <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>central_bank_events <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://raw.githubusercontent.com/marekjarocinski/jkshocks_update_fed/main/shocks_fed_jk_t.csv"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">show_col_types =</span> <span class="cn">FALSE</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">time =</span> start,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">start_ts =</span> start <span class="sc">-</span> <span class="fu">minutes</span>(window_size),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">end_ts =</span> start <span class="sc">+</span> <span class="fu">minutes</span>(window_size)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Looping over many dates issues many requests to the Hugging Face API in</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co"># quick succession, which can trigger rate limiting (HTTP 429). We retry with</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co"># exponential backoff so that the download completes reliably within the limits.</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>download_hf_day <span class="ot">&lt;-</span> <span class="cf">function</span>(date, <span class="at">max_tries =</span> <span class="dv">8</span>) {</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (attempt <span class="cf">in</span> <span class="fu">seq_len</span>(max_tries)) {</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">download_data</span>(</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">domain =</span> <span class="st">"Tidy Finance"</span>,</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">dataset =</span> <span class="st">"high_frequency_sp500"</span>,</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">start_date =</span> date,</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">end_date =</span> date</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">error =</span> <span class="cf">function</span>(e) e</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">inherits</span>(result, <span class="st">"error"</span>)) {</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(result)</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Sys.sleep</span>(<span class="fu">min</span>(<span class="dv">2</span><span class="sc">^</span>attempt, <span class="dv">45</span>))</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">"Failed to download "</span>, date, <span class="st">" after "</span>, max_tries, <span class="st">" attempts: "</span>,</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>       <span class="fu">conditionMessage</span>(result))</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> central_bank_events <span class="sc">|&gt;</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(time)) <span class="sc">|&gt;</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">&gt;=</span> <span class="st">"2007-06-27"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">50</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">map</span>(date, \(x) {</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>      <span class="fu">Sys.sleep</span>(<span class="dv">2</span>)</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>      <span class="fu">download_hf_day</span>(x)</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Once we downloaded all the data for every FOMC announcement within our sample period, we can aggregate trading information around the event times. In the example below, we focus on quoted depth, trading volume and the bid-ask spreads.</p>
+<p>Once we downloaded all the data for every FOMC announcement within our sample period, we can aggregate trading information around the event times. In the example below, we focus on quoted depth, trading volume and the bid-ask spreads. Spread and depth are missing in halted intervals, so all summaries use <code>na.rm = TRUE</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>hf_data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(data) <span class="sc">|&gt;</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date) <span class="sc">|&gt;</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">open_midquote =</span> <span class="fu">first</span>(midquote),</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">time_rel =</span> <span class="fu">as.numeric</span>(<span class="fu">difftime</span>(ts, time, <span class="at">units =</span> <span class="st">"mins"</span>)),</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">depth =</span> (depth5_bid <span class="sc">+</span> depth5_ask) <span class="sc">*</span> open_midquote <span class="sc">/</span> <span class="fl">1e6</span>,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">trading_volume =</span> trading_volume <span class="sc">/</span> <span class="fl">1e6</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ts <span class="sc">&gt;=</span> start_ts, ts <span class="sc">&lt;=</span> end_ts) <span class="sc">|&gt;</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(time_rel, trading_volume, depth, spread) <span class="sc">|&gt;</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>time_rel) <span class="sc">|&gt;</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(time_rel, name) <span class="sc">|&gt;</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>      value,</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">list</span>(</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">mean =</span> \(x) <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">p5 =</span> \(x) <span class="fu">quantile</span>(x, <span class="fl">0.05</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">p95 =</span> \(x) <span class="fu">quantile</span>(x, <span class="fl">0.95</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>      ),</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">.names =</span> <span class="st">"{.fn}"</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="fu">case_when</span>(</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">==</span> <span class="st">"trading_volume"</span> <span class="sc">~</span> <span class="st">"Trading volume (mUSD)"</span>,</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">==</span> <span class="st">"spread"</span> <span class="sc">~</span> <span class="st">"Bid-ask spread (bp)"</span>,</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">==</span> <span class="st">"depth"</span> <span class="sc">~</span> <span class="st">"Quoted depth (mUSD)"</span></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>hf_data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(data) <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date) <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">open_midquote =</span> <span class="fu">first</span>(midquote),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">time_rel =</span> <span class="fu">as.numeric</span>(<span class="fu">difftime</span>(ts, time, <span class="at">units =</span> <span class="st">"mins"</span>)),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">depth =</span> (depth5_bid <span class="sc">+</span> depth5_ask) <span class="sc">*</span> open_midquote <span class="sc">/</span> <span class="fl">1e6</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">trading_volume =</span> trading_volume <span class="sc">/</span> <span class="fl">1e6</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ts <span class="sc">&gt;=</span> start_ts, ts <span class="sc">&lt;=</span> end_ts) <span class="sc">|&gt;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(time_rel, trading_volume, depth, spread) <span class="sc">|&gt;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>time_rel) <span class="sc">|&gt;</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(time_rel, name) <span class="sc">|&gt;</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>      value,</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">list</span>(</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">mean =</span> \(x) <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">p5 =</span> \(x) <span class="fu">quantile</span>(x, <span class="fl">0.05</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">p95 =</span> \(x) <span class="fu">quantile</span>(x, <span class="fl">0.95</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">.names =</span> <span class="st">"{.fn}"</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="fu">case_when</span>(</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">==</span> <span class="st">"trading_volume"</span> <span class="sc">~</span> <span class="st">"Trading volume (mUSD)"</span>,</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">==</span> <span class="st">"spread"</span> <span class="sc">~</span> <span class="st">"Bid-ask spread (bp)"</span>,</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">==</span> <span class="st">"depth"</span> <span class="sc">~</span> <span class="st">"Quoted depth (mUSD)"</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Finally, we illustrate how markets respond at high-frequencies to FOMC announcements around the exact time of announcement.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>hf_data <span class="sc">|&gt;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> time_rel, <span class="at">y =</span> mean)) <span class="sc">+</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>name, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Minutes from announcement"</span>,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">NULL</span>,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Event-Study (HF Data): average value around FOMC announcements"</span>,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="cn">NULL</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> p5, <span class="at">ymax =</span> p95), <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"None"</span>) <span class="sc">+</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span>window_size, window_size, <span class="at">by =</span> <span class="dv">5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>hf_data <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> time_rel, <span class="at">y =</span> mean)) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>name, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Minutes from announcement"</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">NULL</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Event-Study (HF Data): average value around FOMC announcements"</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="cn">NULL</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> p5, <span class="at">ymax =</span> p95), <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"None"</span>) <span class="sc">+</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span>window_size, window_size, <span class="at">by =</span> <span class="dv">5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/plot-event-study-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="index_files/figure-html/plot-event-study-1.png" class="img-fluid figure-img" width="2100"></a></p>
+</figure>
 </div>
-<p>The chart illustrates a pronounced spike in bid-ask spreads and trading volume right at the FOMC announcement, alongside a temporary dip in quoted depth. These patterns are consistent with market makers widening quotes and pulling liquidity ahead of the news release. The full dataset, covering July 2007 through October 2025, is available on <a href="https://huggingface.co/datasets/voigtstefan/sp500">Hugging Face</a> and can be accessed directly via <code>tidyfinance::download_data("tidyfinance", "high_frequency_sp500")</code>.</p>
+</div>
+</div>
+<p>The chart shows averages over the 47 sampled announcements with data in the window, and the band covers the 5th to the 95th percentile. Bid-ask spreads and trading volume spike right at the announcement: the average spread rises from about 0.6 basis points half an hour earlier to 2.4 basis points within the first 10 seconds, and trading volume from about USD 0.6 million to USD 10.6 million per 5 seconds. Quoted depth falls gradually during the 30 minutes before the announcement, from about USD 39 million to USD 6 million right after it, and recovers only slowly, to about USD 30 million after 30 minutes. These patterns are consistent with market makers widening quotes and pulling liquidity ahead of the news release. The full dataset, covering June 27, 2007 through November 23, 2026, is available on <a href="https://huggingface.co/datasets/voigtstefan/sp500">Hugging Face</a> and can be accessed directly via <code>tidyfinance::download_data(domain = "Tidy Finance", dataset = "high_frequency_sp500")</code>.</p>
 
 
 </section>
 
 </main> <!-- /main -->
 <div class="custom-footer">
-
   <div class="copyright">© Christoph Frey, Christoph Scheuch, Stefan Voigt &amp; Patrick Weiss</div>
-
   <a href="disclaimer.html">Disclaimer</a>
-
   <a href="#" id="open_preferences_center">Cookie Preferences</a>
-
 </div>
-
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -508,11 +543,30 @@ window.Quarto = {
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
         var filterRegex = new RegExp("^(?:http:|https:)\/\/www\.tidy-finance\.org");
+      const newWindowLabel = "(opens in a new tab)";
+      const newWindowNoteId = "quarto-ext-newwindow-label";
+      // Links reference one hidden label through aria-describedby, so the
+      // announcement never changes their accessible name.
+      var describeNewWindow = (link) => {
+        if (!window.document.getElementById(newWindowNoteId)) {
+          var newWindowNote = window.document.createElement("span");
+          newWindowNote.id = newWindowNoteId;
+          newWindowNote.hidden = true;
+          newWindowNote.textContent = newWindowLabel;
+          window.document.body.appendChild(newWindowNote);
+        }
+        var describedBy = (link.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean);
+        if (!describedBy.includes(newWindowNoteId)) {
+          describedBy.push(newWindowNoteId);
+          link.setAttribute("aria-describedby", describedBy.join(" "));
+        }
+      }
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -526,8 +580,70 @@ window.Quarto = {
             if (link.getAttribute("rel") === null) {
               link.setAttribute("rel", "noopener");
             }
+            describeNewWindow(link);
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -541,6 +657,7 @@ window.Quarto = {
         interactiveBorder: 10,
         theme: 'quarto',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;
@@ -703,44 +820,54 @@ window.Quarto = {
           const lineIds = lines.map((line) => {
             return targetCell + "-" + line;
           })
-          let top = null;
-          let height = null;
-          let parent = null;
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
           if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
             }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
             }
+            placeBand(gutterDiv, el, lastEl);
             selectedAnnoteEl = annoteEl;
           }
         };
@@ -839,6 +966,9 @@ window.Quarto = {
     }
   });
   </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -853,6 +983,38 @@ window.Quarto = {
     </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 

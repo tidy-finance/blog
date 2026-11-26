@@ -1,50 +1,92 @@
+> **NOTE:**
+>
+> The dataset on Hugging Face has a new version ([revision c06c532](https://huggingface.co/datasets/voigtstefan/sp500/blob/c06c532ae041037fe7ad7b855b2b416cc0dcc6e4/README.md)). It was rebuilt with the corrected cleaning code of `lobsteR`, which fixes the signed volume (hidden trades exactly at the midquote set it to zero before), now runs from June 27, 2007 to November 23, 2026, and has five new columns; the dataset card lists all changes. This post now describes the columns as they are in the files, and the case study below uses the new version.
+
 In a [companion blog post](../../posts/hf-and-lobster/index.llms.md), we introduced [lobsteR](https://voigtstefan.github.io/lobsteR/), a new R package for downloading and cleaning high-frequency order book data from [LOBSTER](https://lobsterdata.com/). This second post focuses on the public dataset we released alongside our working paper [Market responses to a VIX shock](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6298780) with [Nikolaus Hautsch](https://homepage.univie.ac.at/nikolaus.hautsch/) and [Albert J. Menkveld](https://albertjmenkveld.com/).
 
-This is part two of two blog posts in which we announce and explain two major updates to the [tidy-finance.org](https://tidy-finance.org) ecosystem:
+This is part two of two blog posts in which we announce and explain two updates to the [tidy-finance.org](https://tidy-finance.org) ecosystem:
 
-1.  `lobsteR` is a novel R package to request and download high-frequency orderbook snapshot data from [LOBSTER](https://lobsterdata.com/). We provide a short vignette on how to use the package in the [first post](../../posts/hf-and-lobster/index.llms.md).
-2.  Seamless access to a massive, 5-second level dataset on S&P 500 index tracking ETF SPY via `tidyfinance::download_data("tidyfinance", "high_frequency_sp500", "2025-01-01", "2025-01-10")`
+1.  `lobsteR` is an R package to request, download, and clean high-frequency order book data from [LOBSTER](https://lobsterdata.com/). We provide a short vignette on how to use the package in the [first post](../../posts/hf-and-lobster/index.llms.md).
+2.  Access to a 5-second dataset on the S&P 500 index tracking ETF SPY via `tidyfinance::download_data(domain = "Tidy Finance", dataset = "high_frequency_sp500", start_date = "2025-01-01", end_date = "2025-01-10")`.
 
 ## 20 years of HF data
 
 In our paper “Market responses to a VIX shock”, [Nikolaus Hautsch](https://homepage.univie.ac.at/nikolaus.hautsch/), [Albert J. Menkveld](https://albertjmenkveld.com/) and I investigated under the microscope how markets respond to a sudden increase in the VIX based on an exhaustive 2007-2025 sample of *all* NASDAQ trading messages for two exchange-traded funds (ETFs): SPY for the S&P 500 equity index and TLT for government bonds.
 
-We collect message-level snapshots of the NASDAQ limit order book for the very actively traded S&P 500 ETF SPY. For our analysis we retrieve and evaluate the entire available order book message history from July 1st, 2007 to October 31st, 2025 from data provider LOBSTER.
+The dataset we publish covers the very actively traded S&P 500 ETF SPY. It is built from the entire order book message history that LOBSTER offers, from June 27, 2007 (the first day available) to November 23, 2026: 4,876 trading days.
 
-Our sample contains a record for *each* message (submissions, adjustments, and cancellations of market and limit orders) and reconstructed snapshots of the complete order book for the first 50 levels.
+The raw data contain a record for *each* message, that is, every submission, partial cancellation, and deletion of a limit order and every execution of a visible or a hidden limit order, together with reconstructed snapshots of the complete order book for the first 50 levels. LOBSTER has no messages for market orders: a market order appears as the executions of the resting limit orders it hits.
 
-We restrict our analysis to order book activity during regular trading hours. The entire dataset comprises more than 30 billion order book messages and was evaluated using the procedures described in [a previous post](../../posts/hf-and-lobster/index.llms.md).
+We restrict the data to continuous trading during regular trading hours, from 09:30 to 16:00 New York time (to the closing cross at 13:00 on early-close days). The files aggregate 24.5 billion order book messages of continuous trading, cleaned with the procedures described in the [previous post](../../posts/hf-and-lobster/index.llms.md). For 85 days from 2019 on, the LOBSTER files end before the close: 78 of them are included as delivered, and 7 without any data are left out. The [dataset card](https://huggingface.co/datasets/voigtstefan/sp500) lists them with the time of the last data.
 
-For a meaningful analysis, we aggregate the order book messages for each ticker into the following six variables, measured at 5-second intervals.
+We aggregate the messages into the following variables, measured at 5-second intervals. Each trading day is one file with 4,680 rows, from 09:30:05 to 16:00:00 (2,521 rows, to 13:00:05, on early-close days).
 
-- Initiator net volume (in million USD) which is the net of buyer and seller initiated shares transacted during the last 5-second interval. We sign transactions as +1 if executed against a sell-side limit order and -1 if executed against a buy-side limit order. For execution against a hidden limit order, we impose the sign +1 if the transaction executes at a price that exceeds the last observed midquote and -1 if the transaction price is below the last observed midquote. To make the values comparable across assets, we multiply the aggregate net number of traded shares with the rolling 12-month average midquote computed for each ticker.
-- Return (in basis points) computed as \\\log(p\_{t, \tau}) - \log(p\_{t, \tau - 1})\\, where \\t\\ corresponds to the trading day and 5-second time stamps are \\\tau \in\left\\0, \ldots, 78\right\\\\ which range from 09:30 a.m. (\\\tau = 0\\) until 4:00 p.m. \\p\_{t, \tau}\\ is the last observed midquote on day \\t\\ before time stamp \\\tau\\.
-- Trading volume (in million USD), which is the cumulative trading volume during each 5-second interval. We compute trading volume as the number of traded shares times the transaction price.
-- Bid-ask spread (in basis points), computed as the time-weighted average difference between the best prices quoted at the sell and buy side of the order book during each 5-second interval. We compute the bid-ask spread relative to the current midquote for every order book snapshot.
-- Depth (in million USD), measured as the number of posted shares in visible limit orders 5 basis points from the current best price on both sides of the order book. We take the time-weighted average depth during each interval to aggregate depth from message level into 5-second intervals. To make the values comparable across assets, we multiply the number of available shares with the rolling 12-month average midquote computed for each ticker.
-- Amihud illiquidity measure, computed every five seconds as \\ILLIQ\_{t, \tau} := {\left\|\log(p\_{t, \tau}) - \log(p\_{t, \tau - 1})\right\|}/{V\_{t,\tau}}\\. \\ILLIQ\_{t, \tau}\\ corresponds to the absolute midquote log return divided by trading volume \\V\_{t, \tau}\\ executed on NASDAQ (in million USD). High values indicate large price impacts per unit traded and are thus associated with illiquidity. In our empirical analysis, we set \\ILLIQ\_{t, \tau}\\ to missing values for time stamps for which the trading volume is zero.
+- `ts`: the end of the 5-second interval. The time stamps hold New York clock time stored with a UTC label: 09:30:05 in New York is stored as 09:30:05 UTC.
+- `midquote` (in USD): the midpoint of the best bid and the best ask price at the end of the interval. During a trading halt, it keeps its last value.
+- `signed_volume` (in shares): initiator net volume, the number of buyer-initiated minus seller-initiated shares transacted during the interval. We sign transactions as +1 if executed against a sell-side limit order and -1 if executed against a buy-side limit order. For executions against a hidden limit order, we impose the sign +1 if the transaction price exceeds the midquote just before the trade and -1 if it is below. Hidden executions exactly at the midquote stay unsigned: they count in `trading_volume` and `midpoint_volume`, but not in `signed_volume`. `signed_volume` is missing in intervals without trades.
+- `trading_volume` (in USD): the cumulative trading volume during the interval, the number of traded shares times the transaction price, including unsigned trades.
+- `spread` (in basis points): the time-weighted average difference between the best ask and the best bid price during the interval, relative to the midquote of each order book snapshot.
+- `depth0_bid`, `depth0_ask` (in shares): the time-weighted average number of shares at the best bid and at the best ask.
+- `depth5_bid`, `depth5_ask` (in shares): the time-weighted average number of shares in visible limit orders within 5 basis points of the best price, on the bid and on the ask side of the order book.
+- `midpoint_volume` (in USD): the trading volume of hidden executions exactly at the midquote, the part of `trading_volume` without a sign.
+- `n_messages`, `n_trades`: the number of order book messages and of executions (visible and hidden) in the interval. Intervals with `n_messages` equal to 0 carry over the book state in force.
+- `halted`: true if the interval overlaps a trading halt. Spread and depth are missing in halted intervals, which affects the four market-wide halts of March 2020.
+- `depth5_truncated`: true if depth within 5 basis points may be cut short because the order book files hold only 50 levels. It is false in every interval.
 
-In order to process these massive amounts of data, we relied on one of Denmark’s largest supercomputing facilities. In order to render follow-up research feasible, we decided to make the aggregated data accessible on [Hugging Face](https://huggingface.co/datasets/voigtstefan/sp500), including a fast, easy and transparent connector via the `tidyfinance` library.
+In the paper, we aggregate these variables further to 5-minute intervals and express initiator net volume, trading volume, and depth in million USD: shares are multiplied by the median midquote of the previous 12 months. The paper also uses 5-minute midquote returns and the Amihud illiquidity measure, which are not part of the files.
+
+In order to process these amounts of data, we relied on one of Denmark’s largest supercomputing facilities. To make follow-up research feasible, we decided to make the aggregated data accessible on [Hugging Face](https://huggingface.co/datasets/voigtstefan/sp500), and they can be read directly with the `tidyfinance` package.
 
 All you need is the following call to `download_data`:
 
 ``` r
 library(tidyfinance)
 library(tidyverse)
+```
 
+    ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+    ✔ dplyr     1.2.1     ✔ readr     2.2.0
+    ✔ forcats   1.0.1     ✔ stringr   1.6.0
+    ✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+    ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+    ✔ purrr     1.2.2     
+    ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+    ✖ dplyr::filter() masks stats::filter()
+    ✖ dplyr::lag()    masks stats::lag()
+    ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+``` r
 download_data(
-  domain = "tidyfinance",
+  domain = "Tidy Finance",
   dataset = "high_frequency_sp500",
   start_date = "2020-01-01",
   end_date = "2020-01-15"
 )
 ```
 
+    # A tibble: 46,800 × 14
+       ts                  midquote signed_volume trading_volume depth0_ask
+       <dttm>                 <dbl>         <dbl>          <dbl>      <dbl>
+     1 2020-01-02 09:30:05     324.           438       5160652.       847.
+     2 2020-01-02 09:30:10     324.          2955       1748767.       912.
+     3 2020-01-02 09:30:15     324.          4222       2429054.       442.
+     4 2020-01-02 09:30:20     324.         -3987       3548350.       946.
+     5 2020-01-02 09:30:25     324.        -44889      16407684.      1157.
+     6 2020-01-02 09:30:30     324.          -542       1649047.       651.
+     7 2020-01-02 09:30:35     324.          4771       3479299.       815.
+     8 2020-01-02 09:30:40     324.          2724       1478392.      1082.
+     9 2020-01-02 09:30:45     324.           649        883830.       559.
+    10 2020-01-02 09:30:50     324.          2549       1075559.       587.
+    # ℹ 46,790 more rows
+    # ℹ 9 more variables: depth0_bid <dbl>, depth5_ask <dbl>, depth5_bid <dbl>,
+    #   spread <dbl>, midpoint_volume <dbl>, n_messages <int>, n_trades <int>,
+    #   halted <lgl>, depth5_truncated <lgl>
+
 ## A simple case study
 
-Suppose you are interested in high-frequency responses of the S&P 500 index to FOMC announcements within a short window around the announcements. [Marek Jarocinski](https://marekjarocinski.github.io/) at the ECB collected a long history of FOMC announcement dates (Source: Updating Monetary Policy and Central Bank Information shocks originally constructed in Jarocinski, M. and Karadi, P. (2020) Deconstructing Monetary Policy Surprises - The Role of Information Shocks, AEJ:Macro, DOI: http://doi.org/10.1257/mac.20180090), which we use for our case study.
+Suppose you are interested in high-frequency responses of the S&P 500 index to FOMC announcements within a short window around the announcements. [Marek Jarocinski](https://marekjarocinski.github.io/) at the ECB collected a long history of FOMC announcement dates and times (Source: Updating Monetary Policy and Central Bank Information shocks originally constructed in Jarocinski, M. and Karadi, P. (2020) Deconstructing Monetary Policy Surprises - The Role of Information Shocks, AEJ:Macro, DOI: http://doi.org/10.1257/mac.20180090), which we use for our case study.
 
-Note that we focus on a lot of data. In total, we record 324 central bank event dates. For each date, we could download 5-second level observations for the S&P 500 tracking ETF SPY. Thus, the next code chunk downloads all dates for which FOMC announcements took place. We then download S&P 500 data for a random subset of 50 such days.
+Note that we focus on a lot of data. In total, the file records 334 FOMC announcements since 1990, 168 of them between June 2007 and November 2026. For each of these dates, we could download 5-second level observations for the S&P 500 tracking ETF SPY. Thus, the next code chunk downloads all dates for which FOMC announcements took place. We then download S&P 500 data for a random subset of 50 such days. The announcement times are New York times, read as UTC by `read_csv()`, just like the time stamps of our dataset, so the two line up without any time-zone conversion.
 
 ``` r
 window_size <- 30
@@ -66,8 +108,8 @@ download_hf_day <- function(date, max_tries = 8) {
   for (attempt in seq_len(max_tries)) {
     result <- tryCatch(
       download_data(
-        "tidyfinance",
-        "high_frequency_sp500",
+        domain = "Tidy Finance",
+        dataset = "high_frequency_sp500",
         start_date = date,
         end_date = date
       ),
@@ -85,7 +127,7 @@ download_hf_day <- function(date, max_tries = 8) {
 set.seed(2026)
 data <- central_bank_events |>
   mutate(date = as.Date(time)) |>
-  filter(date > "2006-07-27") |>
+  filter(date >= "2007-06-27") |>
   slice_sample(n = 50) |>
   mutate(
     data = map(date, \(x) {
@@ -95,7 +137,7 @@ data <- central_bank_events |>
   )
 ```
 
-Once we downloaded all the data for every FOMC announcement within our sample period, we can aggregate trading information around the event times. In the example below, we focus on quoted depth, trading volume and the bid-ask spreads.
+Once we downloaded all the data for every FOMC announcement within our sample period, we can aggregate trading information around the event times. In the example below, we focus on quoted depth, trading volume and the bid-ask spreads. Spread and depth are missing in halted intervals, so all summaries use `na.rm = TRUE`.
 
 ``` r
 hf_data <- data |>
@@ -153,4 +195,6 @@ hf_data |>
   scale_x_continuous(breaks = seq(-window_size, window_size, by = 5))
 ```
 
-The chart illustrates a pronounced spike in bid-ask spreads and trading volume right at the FOMC announcement, alongside a temporary dip in quoted depth. These patterns are consistent with market makers widening quotes and pulling liquidity ahead of the news release. The full dataset, covering July 2007 through October 2025, is available on [Hugging Face](https://huggingface.co/datasets/voigtstefan/sp500) and can be accessed directly via `tidyfinance::download_data("tidyfinance", "high_frequency_sp500")`.
+[![](index_files/figure-html/plot-event-study-1.png)](index_files/figure-html/plot-event-study-1.png)
+
+The chart shows averages over the 47 sampled announcements with data in the window, and the band covers the 5th to the 95th percentile. Bid-ask spreads and trading volume spike right at the announcement: the average spread rises from about 0.6 basis points half an hour earlier to 2.4 basis points within the first 10 seconds, and trading volume from about USD 0.6 million to USD 10.6 million per 5 seconds. Quoted depth falls gradually during the 30 minutes before the announcement, from about USD 39 million to USD 6 million right after it, and recovers only slowly, to about USD 30 million after 30 minutes. These patterns are consistent with market makers widening quotes and pulling liquidity ahead of the news release. The full dataset, covering June 27, 2007 through November 23, 2026, is available on [Hugging Face](https://huggingface.co/datasets/voigtstefan/sp500) and can be accessed directly via `tidyfinance::download_data(domain = "Tidy Finance", dataset = "high_frequency_sp500")`.
