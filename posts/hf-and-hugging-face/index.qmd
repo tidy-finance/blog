@@ -176,14 +176,13 @@ hf_data |>
   labs(
     x = "Minutes from announcement",
     y = NULL,
-    title = "Event-Study (HF Data): average value around FOMC announcements",
     color = NULL
   ) +
   geom_ribbon(aes(ymin = p5, ymax = p95), alpha = 0.2) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "grey") +
   theme_minimal() +
   theme(legend.position = "None") +
-  scale_x_continuous(breaks = seq(-window_size, window_size, by = 5))
+  scale_x_continuous(breaks = seq(-window_size, window_size, by = 10))
 ```
 
 The chart shows averages over the 47 sampled announcements with data in the window, and the band covers the 5th to the 95th percentile. Bid-ask spreads and trading volume spike right at the announcement: the average spread rises from about 0.6 basis points half an hour earlier to 2.4 basis points within the first 10 seconds, and trading volume from about USD 0.6 million to USD 10.6 million per 5 seconds. Quoted depth falls gradually during the 30 minutes before the announcement, from about USD 39 million to USD 6 million right after it, and recovers only slowly, to about USD 30 million after 30 minutes. These patterns are consistent with market makers widening quotes and pulling liquidity ahead of the news release. The full dataset, covering June 27, 2007 through November 23, 2026, is available on [Hugging Face](https://huggingface.co/datasets/voigtstefan/sp500) and can be accessed directly via `tidyfinance::download_data(domain = "Tidy Finance", dataset = "high_frequency_sp500")`.

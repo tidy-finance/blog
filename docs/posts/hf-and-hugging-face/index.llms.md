@@ -185,14 +185,13 @@ hf_data |>
   labs(
     x = "Minutes from announcement",
     y = NULL,
-    title = "Event-Study (HF Data): average value around FOMC announcements",
     color = NULL
   ) +
   geom_ribbon(aes(ymin = p5, ymax = p95), alpha = 0.2) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "grey") +
   theme_minimal() +
   theme(legend.position = "None") +
-  scale_x_continuous(breaks = seq(-window_size, window_size, by = 5))
+  scale_x_continuous(breaks = seq(-window_size, window_size, by = 10))
 ```
 
 [![](index_files/figure-html/plot-event-study-1.png)](index_files/figure-html/plot-event-study-1.png)
